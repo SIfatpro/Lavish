@@ -1,0 +1,30 @@
+{% extends 'Base.html' %} {% block title %}Book Shop | Home {% endblock %} {%
+load static %} {% block content %}
+
+<section id="search-results">
+  {% if suggestions %}
+  <h2>Did you mean:</h2>
+  <ul>
+    {% for suggestion in suggestions %}
+    <li>{{ suggestion }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %} 
+  {% if products %}
+  <h2>Products</h2>
+  <div class="product-list">
+    {% for product in products %}
+    <div class="product-item">
+      <img src="{{ product.image }}" alt="{{ product.name }}" />
+      <h3>{{ product.name }}</h3>
+      <p>{{ product.price }}</p>
+      <a href="{% url 'product_detail' product.slug %}">View Details</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No results found.</p>
+  {% endif %}
+</section>
+
+{% endblock %}

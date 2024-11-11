@@ -1,0 +1,88 @@
+/* styles.css */
+
+/* Card */
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  padding: 20px;
+}
+
+/* Product Title */
+.product-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Product Rating */
+.product-rating {
+  color: #ffa500; /* Gold color for stars */
+}
+
+.new-price {
+  font-size: 1.2vw;
+  color: #424242;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: .5px;
+}
+
+.new-price span {
+  font-size: 1.5vw;
+  color: #424242;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, sans-serif;
+  letter-spacing: .5px;
+}
+
+.last-price {
+  text-decoration: line-through;
+  color: #dc3545; /* Red color for old price */
+}
+
+/* Quantity Buttons */
+.qty {
+  display: flex;
+  align-items: center;
+}
+
+.qty button {
+  background-color: #007bff; /* Bootstrap primary color */
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.qty input {
+  width: 50px;
+  text-align: center;
+}
+
+/* Purchase Info */
+.purchase-info {
+  display: flex;
+  gap: 10px; /* Spacing between buttons */
+}
+
+.delivery-service strong {
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* Tabs */
+.nav-tabs {
+  margin-bottom: 15px;
+}
+
+.nav-tabs .active a {
+  padding: 10px;
+  color: white;
+}
+
+.tab-content {
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+

@@ -1,0 +1,140 @@
+{% extends 'Base.html' %} {% block title %}Book Shop | Home{% endblock %} {%
+load static %} {% load socialaccount %} {% block content %}
+<section class="login-container">
+  <div class="center">
+    <h2>Login</h2>
+    <h3>
+      Don’t have an account?
+      <a class="registration-form-btn" href="{% url 'accounts:register' %}"
+        >Register Now!</a
+      >
+    </h3>
+    <form method="POST" id="login-form" action="{% url 'accounts:login' %}">
+      {% csrf_token %}
+      <!-- Error message display -->
+      <div
+        id="error-message"
+        style="color: red; text-align: center; display: none"
+      ></div>
+      <div class="input-field">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          class="input"
+          autocomplete="on"
+        />
+      </div>
+      <div class="input-field">
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          class="input"
+          autocomplete="on"
+        />
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          name="remember"
+          id="flexCheckChecked"
+        />
+        <label
+          class="form-check-label"
+          for="flexCheckChecked"
+          style="
+            position: relative;
+            top: 0px;
+            font-size: 0.8rem;
+            color: #676767;
+          "
+        >
+          Remember me
+        </label>
+        <span class="ml-auto">
+          <a
+            href="{% url 'accounts:password_reset' %}"
+            style="
+              position: relative;
+              text-decoration: none;
+              color: #6e6e6e;
+              font-size: 0.7rem;
+              margin-right: 5px;
+              font-weight: 600;
+              top: 5px;
+            "
+            >Forgot your password?</a
+          >
+        </span>
+      </div>
+      <div class="input-field">
+        <button type="submit" class="info">Log in</button>
+      </div>
+    </form>
+
+    <span class="d-block text-center my-4 text-muted">OR</span>
+    <div class="social-login">
+      <a href="{% url 'social:begin' 'facebook' %}" class="facebook">
+        <i class="fa fa-facebook" aria-hidden="true"></i>
+      </a>
+      <a href="{% url 'social:begin' 'google-oauth2' %}" class="google">
+        <i class="fa fa-google" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // jQuery for AJAX form submission and displaying errors
+  $(document).ready(function () {
+    $("#login-form").on("submit", function (event) {
+      event.preventDefault();
+
+      // Clear previous error messages
+      $("#error-message").hide().text("");
+
+      // Get input values
+      const email = $("input[name='email']").val();
+      const password = $("input[name='password']").val();
+
+      // Validate email and password
+      if (!email || !password) {
+        $("#error-message")
+          .text("Please fill in both email and password.")
+          .show();
+        return; // Stop the form submission
+      }
+
+      $.ajax({
+        type: "POST",
+        url: $(this).attr("action"), // URL for login action
+        data: $(this).serialize(),
+        dataType: "json",
+        success: function (response) {
+          if (response.status === "success") {
+            // Redirect on success
+            window.location.href = "/"; // Update this to your desired URL
+          }
+        },
+        error: function (response) {
+          // Clear previous errors
+          $("#error-message").hide().text("");
+
+          // Handle server-side validation errors if any
+          if (response.responseJSON && response.responseJSON.message) {
+            $("#error-message").text(response.responseJSON.message).show();
+          } else {
+            $("#error-message")
+              .text("Incorrect email or password. Please try again.")
+              .show();
+          }
+        },
+      });
+    });
+  });
+</script>
+
+{% endblock %}

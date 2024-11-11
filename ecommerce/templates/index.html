@@ -1,0 +1,461 @@
+{% extends 'Base.html' %}
+{% block title %}Book Shop | Home{% endblock %}
+{% load static %}
+
+{% block content %}
+<style>
+  .carousel-item img {
+    width: 100%;
+    height: auto;
+  }
+
+  .carousel-caption {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    text-align: center;
+    width: 100%;
+  }
+
+  .carousel {
+    margin: auto;
+    padding: 0;
+  }
+
+  .carousel .carousel-indicators {
+    bottom: -16px;
+  }
+
+  .category-wrapper {
+    height: 130px;
+    width: 100px;
+    background-color: #fff;
+    /* White background for each category */
+    border: 1px solid #e0e0e0;
+    /* Light border */
+    transition: transform 0.2s;
+    /* Smooth scale effect on hover */
+    overflow: hidden;
+    /* Prevents overflow */
+    text-align: center;
+    /* Center text in category wrapper */
+  }
+
+  .category-wrapper:hover {
+    transform: scale(1.05);
+    /* Slightly enlarge on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    /* Shadow effect on hover */
+  }
+
+  .category-wrapper img {
+    padding-top: 5px;
+    width: 85px;
+    height: 90px;
+    object-fit: cover;
+    /* Ensures the image covers the area without distortion */
+    display: block;
+    /* Ensures the image behaves as a block element */
+    margin: 0 auto;
+    /* Center the image */
+  }
+
+  .category-wrapper h4 {
+    font-size: 1vw;
+    padding-top: 5px;
+  }
+
+  .cat {
+    font-size: 2vw;
+    padding-top: 10px;
+    font-family: "Roboto Condensed", sans-serif;
+    padding-left: 5px;
+    padding-bottom: 10px;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    color: #616161;
+  }
+
+  .swip-wrap {
+    display: flex;
+    transform: translate3d(0px, 0px, 0px);
+    transition-duration: 0ms;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .a-tag {
+    width: 15%;
+    font-size: 1vw;
+  }
+
+  .single__img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .single__img,
+  .single__text {
+    text-align: center;
+  }
+</style>
+
+<div class="body-content outer-top-vs" id="top-banner-and-menu">
+  <div class="container-fluid">
+    <div class="row" style="margin-left: 0; margin-right: 0">
+      <div class="col-xs-12 col-sm-12 col-md-12" style="display: flex;">
+        <!-- ================================== SIDEBAR ================================== -->
+        <div class="col-md-3 sidebar">
+          <div class="side-menu animate-dropdown">
+            <nav class="yamm megamenu-horizontal">
+              <ul class="nav">
+                {% for main in main_cat %}
+                <li class="dropdown menu-item" style="padding-top: 6px; padding-bottom: 6px;">
+                  <a href="#" class="dropdown-catagory" data-toggle="dropdown">
+                    {{ main.main_name }}
+                    <i class="fas fa-chevron-right"
+                      style="float: right; padding-right: 15px; margin-top: 5px; font-size: 1vw;"></i>
+                  </a>
+                  <ul class="dropdown-menu mega-menu">
+                    <div class="row" style="margin: 0 auto;">
+                      {% for cat in main.category_set.all %}
+                      <div class="col-md-12 yamm-content">
+                        <h5>
+                          <a href="{% url 'ecommerce:category_detail' category_slug=cat.slug %}">{{ cat.cat_name }}</a>
+                        </h5>
+                        <ul class="links list-unstyled">
+                          {% for sub in cat.subcategories.all %}
+                          <li style="border:none;">
+                            <a
+                              href="{% url 'ecommerce:subcategory_detail' category_slug=cat.slug subcategory_slug=sub.slug %}">{{ sub.sub_name }}</a>
+                          </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </ul>
+                </li>
+                {% endfor %}
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /.sidebar -->
+
+        <!-- ============================================== Slider ============================================== -->
+        <div class="col-md-9" style="width: 75%;">
+          <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+              {% for image in slider_images %}
+              <button type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}"
+                aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
+              {% endfor %}
+            </div>
+            <div class="carousel-inner">
+              {% for image in slider_images %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ image.image.url }}" alt="{{ image.title }}">
+                <div class="carousel-caption">
+                  <p>{{ image.caption }}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+              data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+              data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+        <!-- /.homebanner-holder -->
+        <!-- ============================================== Slider : END ============================================== -->
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-12" style="margin-bottom: 15px;">
+        <div class="container-fluid" style="background-color:white" ;>
+          <div class="row">
+            <div class="swip-wrap">
+              <div class="col-md-2 a-tag">
+                <div class="single__img"><img
+                    src="https://storage.googleapis.com/pickaboo-prod/media/dcastalia_hybridslider/image/Express_Delivery_1.png"
+                    alt="pickaboo" style=" width: 50%;">
+                </div>
+                <p class="single__text">3 Hours Delivery</p>
+              </div>
+              <div class="col-md-2 a-tag">
+                <div class="single__img"><img
+                    src="https://storage.googleapis.com/pickaboo-prod/media/dcastalia_hybridslider/image/EMI.png"
+                    alt="pickaboo" style=" width: 50%;">
+                </div>
+                <p class="single__text">Up to 36 Months EMI</p>
+              </div>
+              <div class="col-md-2 a-tag">
+                <div class="single__img"><img
+                    src="https://storage.googleapis.com/pickaboo-prod/media/dcastalia_hybridslider/image/Easy_Returns_1.png"
+                    alt="pickaboo" style=" width: 50%;">
+                </div>
+                <p class="single__text">Easy Returns</p>
+              </div>
+              <div class="col-md-2 a-tag">
+                <div class="single__img"><img
+                    src="https://storage.googleapis.com/pickaboo-prod/media/dcastalia_hybridslider/image/Temp.png"
+                    alt="pickaboo" style=" width: 50%;">
+                </div>
+                <p class="single__text">Warranty coverage</p>
+              </div>
+              <div class="col-md-2 a-tag">
+                <div class="single__img"><img
+                    src="https://storage.googleapis.com/pickaboo-prod/media/dcastalia_hybridslider/image/display_insurance.png"
+                    alt="pickaboo" style=" width: 50%;">
+                </div>
+                <p class="single__text">Display insurance</p>
+              </div>
+              <div class="col-md-2 a-tag">
+                <div class="single__img"><img
+                    src="https://storage.googleapis.com/pickaboo-prod/media/dcastalia_hybridslider/image/official_warranty.png"
+                    alt="pickaboo" style=" width: 50%;">
+                </div>
+                <p class="single__text">100% Genuine Products</p>
+              </div>
+            </div>
+            <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+          </div>
+        </div>
+      </div>
+      <!-- ============================================== WIDE PRODUCTS ============================================== -->
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="row">
+          <div class="col-md-4 cnt-strips">
+            <div class="wide-banner cnt-strip">
+              <div class="image">
+                <img class="img-responsive" src="/static/media/banners/home-banner1.jpg" alt="" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="wide-banner cnt-strip">
+              <div class="image">
+                <img class="img-responsive" src="/static/media/banners/home-banner3.jpg" alt="" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="wide-banner cnt-strip">
+              <div class="image">
+                <img class="img-responsive" src="/static/media/banners/home-banner2.jpg" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ============================================== WIDE PRODUCTS : END ============================================== -->
+      <!-- ============================================== Catagory ============================================== -->
+      <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:20px">
+        <div class="container-fluid" style="background-color:white" ;>
+          <h2 class="cat">Shop By Categories</h2>
+          <div class="row" style="padding-bottom: 15px;padding-left: 15px;padding-right: 15px;">
+            {% for category in categories %}
+            <div class="col-sm-1 cat-log" style="padding: 0px">
+              <div class="category-wrapper text-center">
+                <a href="{% url 'ecommerce:category_detail' category_slug=category.slug %}"
+                  style="text-decoration: none;">
+                  {% if category.logo %}
+                  <img src="{{ category.logo.url }}" alt="{{ category.cat_name }} Logo" class="center"
+                    style="max-height: 150px; object-fit: cover;">
+                  {% else %}
+                  <img src="{% static '/media/cat-banner-1.jpg' %}" alt="Default Logo" class="center"
+                    style="max-height: 150px; object-fit: cover;"> <!-- Optional default logo -->
+                  {% endif %}
+                  <h4>{{ category.cat_name }}</h4>
+                </a>
+              </div>
+            </div>
+            {% empty %}
+            <p>No categories available.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <!-- ============================================== Catagory : END ============================================== -->
+
+      <!-- ============================================== SCROLL TABS ============================================== -->
+      <!-- ============================================== New Product ============================================== -->
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="container-fluid" style="background-color: white; margin: 20px auto;">
+          <div class="row">
+            <div class="col-md-12 product-carousel">
+              <h2>New Products</h2>
+              <div id="myCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="0">
+                <div class="carousel-inner">
+                  <div class="carousel-item active" style="min-height: auto;">
+                    <div class="row" style="margin-left: 40px; margin-right:40px;">
+                      {% for product in new_product|slice:":6" %}
+                      <div class="col-sm-2" style="margin-bottom: 10px; padding-right: 0px; padding-left: 5px">
+                        <div class="thumb-wrapper">
+                          <div class="img-box">
+                            {% if product.slug %}
+                            <a href="{% url 'products:product_detail' product_slug=product.slug %}" class="link-class">
+                              {% with primary_image=product.images.all|first %}
+                              {% if primary_image %}
+                              <img src="{{ primary_image.image.url }}" alt="{{ product.name }}" class="img-fluid"
+                                style="max-height: 150px; object-fit: cover;" />
+                              {% else %}
+                              <!-- Fallback image if no primary image is found -->
+                              <img src="{% static 'path/to/default-image.jpg' %}" alt="No Image Available"
+                                class="img-fluid" style="max-height: 150px; object-fit: cover;" />
+                              {% endif %}
+                              {% endwith %}
+                            </a>
+                            {% else %}
+                            <a href="#" class="herf">
+                              {% with primary_image=product.images.all|first %}
+                              {% if primary_image %}
+                              <img src="{{ primary_image.image.url }}" alt="{{ product.name }}" class="img-fluid"
+                                style="max-height: 150px; object-fit: cover;" />
+                              {% else %}
+                              <!-- Fallback image if no primary image is found -->
+                              <img src="{% static 'path/to/default-image.jpg' %}" alt="No Image Available"
+                                class="img-fluid" style="max-height: 150px; object-fit: cover;" />
+                              {% endif %}
+                              {% endwith %}
+                            </a>
+                            {% endif %}
+                          </div>
+                          <div class="thumb-content">
+                            <h4>{{ product.name }}</h4>
+                            <p class="item-price" style="text-align: center;">
+                              {% if product.disk_price %}
+                              <span>৳ {{ product.disk_price|floatformat:"0" }}</span>
+                              <span>-{{ product.discount_percentage }}% OFF</span>
+                              {% else %}
+                              <span>৳ {{ product.price|floatformat:"0" }}</span>
+                              {% endif %}
+                            </p>
+                            <p>
+                              <span class="star-rating">
+                                {% for i in "01234" %}
+                                {% if forloop.counter <= product.full_stars %}
+                                <i class="fas fa-star"></i> <!-- Filled Star -->
+                                {% elif forloop.counter == product.full_stars|add:1 and product.is_half_rating %}
+                                <i class="fas fa-star-half-alt"></i> <!-- Half Star -->
+                                {% else %}
+                                <i class="far fa-star"></i> <!-- Empty Star -->
+                                {% endif %}
+                                {% endfor %}
+                              </span>
+                              {% if product.total_ratings > 0 %}
+                              ({{ product.total_ratings }})
+                              {% endif %}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+
+                <a class="carousel-control-prev" href="#myCarousel" role="button" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#myCarousel" role="button" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== New Product : END ============================================== -->
+      <!-- ============================================== Flash Sale ============================================== -->
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="container-fluid" style="background-color: white;">
+          <div class="row" style="height: 250px;">
+            <div class="col-md-12 product-carousel">
+              <h2>Flash Sale</h2>
+              <div id="flashSaleCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="0"
+                style="margin: 25px auto; padding: 0 50px;">
+                <div class="carousel-inner" style="height: 150px;">
+                  <div class="carousel-item active">
+                    <div class="row">
+                      {% for product in flash_sale_products %}
+                      <div class="col-sm-2">
+                        <div class="thumb-wrapper">
+                          <div class="img-box">
+                            {% if product.slug %}
+                            <a href="{% url 'products:product_detail' product_slug=product.slug %}" class="link-class">
+                              <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid" />
+                            </a>
+                            {% else %}
+                            <a href="#" class="herf">
+                              <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid" />
+                            </a>
+                            {% endif %}
+                          </div>
+                          <div class="thumb-content">
+                            <h4>{{ product.name }}</h4>
+                            <p class="item-price" style="text-align: center;">
+                              {% if product.disk_price %}
+                              <span>Tk.{{ product.disk_price|floatformat:"0" }}</span>
+                              <span>-{{ product.discount_percentage }}% OFF</span>
+                              {% else %}
+                              <span>Tk.{{ product.price|floatformat:"0" }}</span>
+                              {% endif %}
+                            </p>
+                            <p>
+                              <span class="star-rating">
+                                {% for i in "01234" %}
+                                {% if forloop.counter <= product.full_stars %}
+                                <i class="fas fa-star"></i> <!-- Filled Star -->
+                                {% elif forloop.counter == product.full_stars|add:1 and product.is_half_rating %}
+                                <i class="fas fa-star-half-alt"></i> <!-- Half Star -->
+                                {% else %}
+                                <i class="far fa-star"></i> <!-- Empty Star -->
+                                {% endif %}
+                                {% endfor %}
+                              </span>
+                              {% if product.total_ratings > 0 %}
+                              ({{ product.total_ratings }})
+                              {% endif %}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                <a class="carousel-control-prev" href="#flashSaleCarousel" role="button" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#flashSaleCarousel" role="button" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ============================================== Flash Sale : END ============================================== -->
+
+    </div>
+  </div>
+</div>
+{% endblock %}

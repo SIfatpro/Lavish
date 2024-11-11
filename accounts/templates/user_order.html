@@ -1,0 +1,107 @@
+{% extends 'Base.html' %} {% block title %}Book Shop | Home{% endblock %} {%
+load static %} {% load socialaccount %} {% block content %}
+<div class="body-content outer-top-vs" id="top-banner-and-menu">
+  <div class="container-fluid">
+    <div class="col-sm-12 order">
+      <div class="col-sm-4 nav-1">
+        <ul class="nav nav-pills nav-stacked">
+          <li>
+            <a href="/accounts/user_accounts/"
+              ><i class="fa-solid fa-user"></i><span>Account</span></a
+            >
+          </li>
+          <li>
+            <a href="/accounts/user_order/">
+              <i class="fa fa-cart-arrow-down"></i><span>Orders</span></a
+            >
+          </li>
+          <li>
+            <a href="/accounts/user_wishlist/">
+              <i class="fa fa-heart-o"></i><span>Wishlist</span>
+            </a>
+          </li>
+          <li>
+            <a href="/accounts/user_review/">
+              <i class="fa fa-star"></i><span>Reviews & Rating</span>
+            </a>
+          </li>
+          <li>
+            <a href="/accounts/user_coupon/">
+              <i class="fa fa-ticket"></i><span>Coupons</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm-8 profss-1">
+        <div class="middlenav">
+          <h2>My Orders</h2>
+          <div class="middlenavs">
+            <div class="subTitle">Total Order: 0</div>
+            <ul class="list-unstyled list-inline orderViewOpts">
+              <li class="pull-right">
+                <span class="optLabel">Payment Status:</span>
+                <select
+                  class="selectInput"
+                  id="paymentStatus"
+                  onchange="filterOrders()"
+                >
+                  <option value="0">Select One</option>
+                  <option value="2">Not Paid</option>
+                  <option value="3">Paid</option>
+                </select>
+              </li>
+              <li class="pull-right">
+                <span class="optLabel">Order Status:</span>
+                <select
+                  class="selectInput"
+                  id="orderStatus"
+                  onchange="filterOrders()"
+                >
+                  <option value="0">Select One</option>
+                  <option value="1">Processing</option>
+                  <option value="2">Approved</option>
+                  <option value="3">On Shipping</option>
+                  <option value="4">Shipped</option>
+                  <option value="5">Completed</option>
+                  <option value="6">Cancelled</option>
+                  <option value="7">Returned</option>
+                </select>
+              </li>
+            </ul>
+          </div>
+          <div id="orderTable">
+            {% if recent_orders %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Order Number</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Ordered At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order_item in recent_orders %}
+                        <tr>
+                            <td>{{ order_item.order.order_number }}</td>
+                            <td>{{ order_item.product_variant.product.name }}</td>
+                            <td>{{ order_item.quantity }}</td>
+                            <td>{{ order_item.product_variant.product.current_price }}</td>
+                            <td>{{ order_item.order.status }}</td>
+                            <td>{{ order_item.order.ordered_at }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You have no orders yet.</p>
+        {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

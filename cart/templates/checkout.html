@@ -1,0 +1,631 @@
+{% extends 'Base.html' %}
+{% block title %}Book Shop | Checkout{% endblock %}
+{% load static %}
+
+{% block content %}
+
+<style>
+	/* Page Layout */
+	.checkout-page {
+		background-color: #f5f5f5;
+		padding: 30px 0;
+	}
+
+	.checkout-container {
+		background-color: #ffffff;
+		padding: 20px 30px;
+		border-radius: 8px;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		margin-bottom: 20px;
+	}
+
+	.section-title {
+		font-weight: bold;
+		font-size: 1.3rem;
+		color: #333;
+		margin-bottom: 20px;
+	}
+
+	/* Product Items */
+	.product-item {
+		display: flex;
+		align-items: center;
+		margin-bottom: 15px;
+		padding: 10px;
+		border-bottom: 1px solid #eaeaea;
+	}
+
+	.product-item img {
+		width: 60px;
+		height: 60px;
+		object-fit: cover;
+		margin-right: 15px;
+		border-radius: 5px;
+	}
+
+	.product-details {
+		flex: 1;
+		font-size: 0.9rem;
+	}
+
+	.product-quantity,
+	.product-price {
+		text-align: right;
+	}
+
+	/* Total and Payment Sections */
+	.total-section,
+	.payment-section {
+		border-top: 2px solid #eaeaea;
+		padding-top: 15px;
+		margin-top: 20px;
+	}
+
+	/* Buttons */
+	.btn-checkout {
+		background-color: #ff5722;
+		color: #ffffff;
+		border: none;
+		font-size: 1.1rem;
+		padding: 10px;
+		width: 100%;
+	}
+
+	.btn-checkout:hover {
+		background-color: #e64a19;
+	}
+
+	.form-check-input:focus {
+
+		border-color: transparent;
+	}
+
+	/* Forms */
+	.form-label {
+		font-size: 1vw;
+		font-weight: 500;
+		color: #555;
+	}
+
+	.form-control,
+	.form-select {
+		border-radius: 5px;
+		border-radius: 5px;
+		font-family: "Roboto", serif;
+	}
+
+	.form-check-input:checked {
+		background-color: #ff5722;
+		border-color: #ff5722;
+	}
+
+	.form-check-label {
+		font-size: 1vw;
+		color: #333;
+		font-family: "Roboto", serif;
+		font-weight: 500;
+		font-style: normal;
+	}
+
+	/* Responsive */
+	@media (max-width: 768px) {
+		.checkout-container {
+			padding: 15px;
+		}
+
+		.section-title {
+			font-size: 1.2rem;
+		}
+
+		.btn-checkout {
+			font-size: 1rem;
+		}
+	}
+
+	.delivery-options {
+		margin: 20px 0;
+		padding: 15px;
+		background: #fff;
+		border-radius: 8px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	}
+
+	.title {
+		font-size: 24px;
+		font-weight: 500;
+		color: #000;
+		margin-bottom: 15px;
+	}
+
+	.delivery-fieldset {
+		border: none;
+		padding: 0;
+	}
+
+	.delivery-option {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 10px 0;
+		cursor: pointer;
+		border-bottom: 1px solid #e0e0e0;
+	}
+
+	.delivery-option:last-child {
+		border-bottom: none;
+	}
+
+	.delivery-option input[type="radio"] {
+		margin-right: 15px;
+		margin-top: -16px;
+	}
+
+	.label-view {
+		display: flex;
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.option-title {
+		font-size: 1vw;
+		font-weight: 500;
+		margin: 0px;
+	}
+
+	.option-description {
+		font-size: 1vw;
+		font-weight: 400;
+		font-family: "Roboto", serif;
+		color: #4b4b4b;
+	}
+
+	.option-price {
+		font-size: 16px;
+		font-weight: 500;
+		color: #000;
+	}
+
+	.payment-options {
+		margin: 20px 0;
+		padding: 15px;
+		background: #fff;
+		border-radius: 8px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	}
+
+	.title {
+		font-size: 24px;
+		font-weight: 500;
+		color: #000;
+		margin-bottom: 15px;
+	}
+
+	.payment-fieldset {
+		border: none;
+		padding: 0;
+	}
+
+	.payment-option {
+		padding: 10px 0;
+		cursor: pointer;
+		border-bottom: 1px solid #e0e0e0;
+	}
+
+	.payment-option:last-child {
+		border-bottom: none;
+	}
+
+	.payment-option input[type="radio"] {
+		margin-right: 5px;
+	}
+
+	.label-view {
+		display: flex;
+		width: 100%;
+		justify-content: space-between;
+	}
+
+
+	.option-price {
+		font-size: 16px;
+		font-weight: 500;
+		color: #000;
+	}
+
+
+	.option-title {
+		font-size: 18px;
+		font-weight: bold;
+		color: #333;
+		margin-bottom: 4px;
+	}
+
+	/* Styling for the credit card input fields */
+	.credit-card-info label {
+		font-size: 14px;
+		font-weight: 600;
+		color: #555;
+		margin-bottom: 8px;
+	}
+
+	/* Styling for the overall container */
+	.payment-option {
+		gap: 15px;
+		margin-bottom: 20px;
+	}
+
+	.payment-option input[type="radio"] {
+		accent-color: #007bff;
+		/* Color for selected radio button */
+	}
+
+	/* Optional: Add padding and background to label view */
+	.label-view {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+</style>
+
+<div class="checkout-page">
+	<div class="container">
+		<form method="POST">
+		{% csrf_token %}
+		<div class="row">
+			<!-- Shipping and Payment (Left Column) -->
+			<div class="col-lg-8">
+				<div class="checkout-container mb-4">
+					<!-- Shipping Details -->
+					<h5 class="section-title">Shipping Details</h5>
+						
+					<!-- Shipping Address Section -->
+					<h5 class="section-title">Shipping Address</h5>
+					<div class="row">
+						<div class="col-md-12 mb-3">
+							<label for="fullName" class="form-label">Full Name</label>
+							<input type="text" class="form-control" id="fullName" placeholder="Full Name" style="font-size: 1vw;" name="full_name" required>
+						</div>
+					</div>
+				
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<label for="phone" class="form-label">Phone Number</label>
+							<input type="text" class="form-control" id="phone" placeholder="Please enter your phone number" style="font-size: 1vw;" name="phone_number" required>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label for="region" class="form-label">Region</label>
+							<select class="form-select" id="region" name="division" style="font-size: 1vw;" required>
+								<option value="" selected>Please choose your region</option>
+								{% for division in divisions %}
+								<option value="{{ division.id }}">{{ division.division_name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+				
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<label for="city" class="form-label">City</label>
+							<select class="form-select" id="city" name="city" style="font-size: 1vw;" required>
+								<option value="" selected>Please choose your city</option>
+							</select>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label for="area" class="form-label">Area</label>
+							<select class="form-select" id="area" name="area" style="font-size: 1vw;" required>
+								<option value="" selected>Please choose your area</option>
+							</select>
+						</div>
+					</div>
+					<div class="mb-3">
+						<label for="address_line" class="form-label">Address</label>
+						<input type="text" class="form-control" id="address_line" name="address_line" placeholder="For Example: House# 123, Street# 123, ABC Road" style="font-size: 1vw;" required>
+					</div>				
+					<!-- Billing Address Section -->
+					<h5 class="section-title mt-4">Billing Address</h5>
+					<div class="form-check mb-3">
+						<input class="form-check-input" type="radio" name="billing_address_option" id="sameAsShipping" value="same" checked>
+						<label class="form-check-label" for="sameAsShipping">Same as shipping address</label>
+					</div>
+				
+					<div class="form-check mb-3">
+						<input class="form-check-input" type="radio" name="billing_address_option" id="differentBilling" value="different">
+						<label class="form-check-label" for="differentBilling">Use a different billing address</label>
+					</div>
+				
+					<div id="billingAddressForm" style="display: none;">
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="billing_phone" class="form-label">Phone Number</label>
+								<input type="text" class="form-control" id="billing_phone" placeholder="Please enter your phone number" style="font-size: 1vw;" name="billing_phone_number">
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="billing_region" class="form-label">Region</label>
+								<select class="form-select" id="billing_region" name="billing_division" style="font-size: 1vw;">
+									<option value="" selected>Please choose your region</option>
+									{% for division in divisions %}
+									<option value="{{ division.id }}">{{ division.division_name }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="billing_city" class="form-label">City</label>
+								<select class="form-select" id="billing_city" name="billing_city" style="font-size: 1vw;">
+									<option value="" selected>Please choose your city</option>
+								</select>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="billing_area" class="form-label">Area</label>
+								<select class="form-select" id="billing_area" name="billing_area" style="font-size: 1vw;">
+									<option value="" selected>Please choose your area</option>
+								</select>
+							</div>
+						</div>
+						<div class="mb-3">
+							<label for="billing_address" class="form-label">Address</label>
+							<input type="text" class="form-control" id="billing_address" name="billing_address"
+								placeholder="For Example: House# 123, Street# 123, ABC Road" style="font-size: 1vw;">
+						</div>
+					</div>
+					<button type="submit" class="btn btn-primary">Save</button>
+				</div>
+				
+				<script>
+				document.getElementById('sameAsShipping').addEventListener('change', function () {
+					if (this.checked) {
+						// Copy shipping address to billing address
+						document.getElementById('billing_address').value = document.getElementById('address').value;
+						document.getElementById('billing_phone').value = document.getElementById('phone').value;
+						document.getElementById('billing_region').value = document.getElementById('region').value;
+						document.getElementById('billing_city').value = document.getElementById('city').value;
+						document.getElementById('billing_area').value = document.getElementById('area').value;
+						// Hide the billing address form
+						document.getElementById('billingAddressForm').style.display = 'none';
+					}
+				});
+				
+				document.getElementById('differentBilling').addEventListener('change', function () {
+					if (this.checked) {
+						// Show the billing address form
+						document.getElementById('billingAddressForm').style.display = 'block';
+					}
+				});
+				</script>				
+				<!-- Delivery Options Section -->
+				<div class="delivery-options">
+					<h2 class="title">Delivery Options</h2>
+					<fieldset class="delivery-fieldset">
+						<!-- FastPick Delivery Option -->
+						<label class="delivery-option">
+							<input type="radio" name="delivery_option" value="FastPick" checked>
+							<div class="label-view">
+								<div class="left-content">
+									<p class="option-title">FastPick</p>
+									<span class="option-description">Next working day delivery</span>
+								</div>
+								<div class="right-content">
+									<p class="option-price">৳ 100</p>
+								</div>
+							</div>
+						</label>
+
+						<!-- Regular Delivery Option -->
+						<label class="delivery-option">
+							<input type="radio" name="delivery_option" value="Regular Delivery">
+							<div class="label-view">
+								<div class="left-content">
+									<p class="option-title">Regular Delivery</p>
+									<span class="option-description">Delivery in 3-5 working days</span>
+								</div>
+								<div class="right-content">
+									<p class="option-price">৳ 60</p>
+								</div>
+							</div>
+						</label>
+					</fieldset>
+				</div>
+				<!-- Payment Section -->
+				<div class="payment-options">
+					<h2 class="title">Payment Methods</h2>
+					<fieldset class="payment-fieldset">
+						<!-- Cash on Delivery Option -->
+						<label class="payment-option" style="width: 100%;" onclick="selectPaymentMethod('cash-on-delivery')">
+							<div class="payment-opt" style="display:flex;">
+								<input type="radio" name="payment_method" value="cod" id="cash-on-delivery" checked>
+								<p class="option-title">Cash on Delivery</p>
+							</div>
+							<div class="label-view">
+								<div class="left-content">
+									<span class="option-description">Pay in cash upon delivery</span>
+								</div>
+							</div>
+						</label>
+					
+						<!-- Credit/Debit Card Payment Option -->
+						<label class="payment-option" style="width: 100%;" onclick="selectPaymentMethod('card-payment')">
+							<div class="payment-opt" style="display:flex;">
+								<input type="radio" name="payment_method" value="online" id="card-payment">
+								<p class="option-title">Credit/Debit Card</p>
+							</div>
+							<div class="label-view">
+								<div class="left-content" style="width:100%">
+									<!-- Payment Information (Card details section) -->
+									<div class="credit-card-info" id="credit-card-info" style="display: block; padding: 15px;">
+										<div class="form-row" style="width: 50%;">
+											<!-- Card Number -->
+											<div class="form-group col-md-4" style="width: 100%;">
+												<input type="text" name="card_number" id="card_number" class="form-control" placeholder="Card Number" style="width: 100%;">
+											</div>
+											<!-- Expiry Date and CVV -->
+											<div class="form-group col-md-4" style="width: 100%; margin-top: 15px; margin-bottom: 15px; display:flex;">
+												<!-- Expiry Date -->
+												<div class="excv" style="width: 50%; display: inline-block; margin-right: 10px;">
+													<input type="text" name="expiry_date" id="expiry_date" class="form-control" placeholder="MM/YY" style="width: 100%;">
+												</div>
+												<!-- CVV -->
+												<div class="excv" style="width: 50%; display: inline-block;">
+													<input type="text" name="cvv" id="cvv" class="form-control" placeholder="CVV" style="width: 100%;">
+												</div>
+											</div>
+										</div>
+										<!-- Button Centered using CSS -->
+										<div style="margin-top: 15px;">
+											<a href="{% url 'cart:payment_gateway' %}" class="btn btn-primary">Proceed to Payment</a>
+											<button type="submit" class="btn btn-primary">Proceed to Payment</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</label>
+					
+						<!-- Mobile Payment Option -->
+						<label class="payment-option" style="width: 100%;" onclick="selectPaymentMethod('mobile-payment')">
+							<div class="payment-opt" style="display:flex;">
+								<input type="radio" name="payment_method" value="online" id="mobile-payment">
+								<p class="option-title">Mobile Payment</p>
+							</div>
+							<div class="label-view">
+								<div class="left-content">
+									<span class="option-description">Pay using mobile wallets like bKash, Nagad, etc.</span>
+								</div>
+							</div>
+						</label>
+					</fieldset>					
+				</div>
+
+				<script>
+					function selectPaymentMethod(id) {
+						document.getElementById(id).checked = true;
+					}
+				</script>
+
+			</div>
+			<!-- Order Total (Right Column) -->
+			<div class="col-lg-4">
+				<div class="checkout-container total-section" style="margin-top:0px;">
+					<h5 class="section-title">Order Total</h5>
+					<div class="d-flex justify-content-between">
+						<p>Subtotal</p>
+						<p>৳ {{ cart_total }}</p>
+					</div>
+					<div class="d-flex justify-content-between">
+						<p>Shipping Fee</p>
+						<p>৳ {{ delivery_charge }}</p>
+					</div>
+					<div class="d-flex justify-content-between fw-bold">
+						<p>Total</p>
+						<p>৳ {{ grand_total }}</p>
+					</div>
+					<!-- Checkout Button -->
+					<div class="text-center mt-4">
+						<button type="submit" class="btn btn-checkout btn-lg w-100">Place Order</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Toggle Credit Card Payment Form
+    const cardPaymentRadio = document.getElementById("card-payment");
+    const creditCardInfo = document.getElementById("credit-card-info");
+
+    function toggleCardPaymentForm() {
+        if (cardPaymentRadio && cardPaymentRadio.checked) {
+            creditCardInfo.style.display = "block";
+        } else {
+            creditCardInfo.style.display = "none";
+        }
+    }
+
+    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', toggleCardPaymentForm);
+    });
+    window.onload = toggleCardPaymentForm;
+
+    // Toggle Billing Address Form
+    const sameAsShipping = document.getElementById("sameAsShipping");
+    const differentBilling = document.getElementById("differentBilling");
+    const billingAddressForm = document.getElementById("billingAddressForm");
+
+    if (sameAsShipping) {
+        sameAsShipping.addEventListener('change', () => {
+            billingAddressForm.style.display = 'none';
+        });
+    }
+    if (differentBilling) {
+        differentBilling.addEventListener('change', () => {
+            billingAddressForm.style.display = 'block';
+        });
+    }
+
+    // Populate City and Area dynamically for both Shipping and Billing Addresses
+    function setupDynamicDropdowns(region, city, area, urlPrefix) {
+        region.addEventListener('change', function () {
+            const divisionId = this.value;
+            city.innerHTML = '<option value="" selected>Please choose your city</option>';
+            area.innerHTML = '<option value="" selected>Please choose your area</option>';
+
+            if (divisionId) {
+                fetch(`/${urlPrefix}/get_cities/${divisionId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.cities.forEach(cityData => {
+                            city.innerHTML += `<option value="${cityData.id}">${cityData.city_name}</option>`;
+                        });
+                    })
+                    .catch(error => console.error("Error fetching cities:", error));
+            }
+        });
+
+        city.addEventListener('change', function () {
+            const cityId = this.value;
+            area.innerHTML = '<option value="" selected>Please choose your area</option>';
+
+            if (cityId) {
+                fetch(`/${urlPrefix}/get_areas/${cityId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.areas.forEach(areaData => {
+                            area.innerHTML += `<option value="${areaData.id}">${areaData.area_name}</option>`;
+                        });
+                    })
+                    .catch(error => console.error("Error fetching areas:", error));
+            }
+        });
+    }
+
+    const region = document.getElementById("region");
+    const city = document.getElementById("city");
+    const area = document.getElementById("area");
+    const billingRegion = document.getElementById("billing_region");
+    const billingCity = document.getElementById("billing_city");
+    const billingArea = document.getElementById("billing_area");
+
+    setupDynamicDropdowns(region, city, area, "cart");
+    setupDynamicDropdowns(billingRegion, billingCity, billingArea, "cart");
+
+    // Update Shipping Cost and Total Price
+    document.querySelectorAll('input[name="shipping_method"]').forEach((radio) => {
+        radio.addEventListener('change', function () {
+            let shippingCost = 0;
+            if (this.value === 'standard') shippingCost = 50;
+            if (this.value === 'express') shippingCost = 100;
+            if (this.value === 'free') shippingCost = 0;
+
+            // Update displayed shipping cost and total
+            document.getElementById('shippingCost').innerText = `৳${shippingCost}`;
+            const subtotal = parseFloat(document.getElementById('subtotal').innerText.replace('৳', ''));
+            const total = subtotal + shippingCost;
+            document.getElementById('totalPrice').innerText = `৳${total}`;
+        });
+    });
+</script>
+
+{% endblock %}

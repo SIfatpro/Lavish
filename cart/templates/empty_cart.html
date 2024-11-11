@@ -1,0 +1,15 @@
+{% extends 'Base.html' %} {% block title %}Book Shop | Home {% endblock %} {%
+load static %} {% block content %}
+<div class="body-content outer-top-vs" id="top-banner-and-menu">
+  <div class="container-fluid">
+    <div class="row" style="margin-left: 0px; margin-right: 0px">
+      <div class="col-sm-12" style="text-align: center; margin-top: 50px">
+        <h2>Your Cart is Empty</h2>
+        <p>It seems you haven't added anything to your cart yet.</p>
+        <p>Explore our products and add items to your cart.</p>
+        <a href="{% url 'ecommerce:index' %}" class="btn btn-primary">Shop Now</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends 'Base.html' %}
+{% block title %} Book Shop | Home {% endblock %}
+{% load static %}
+{% block content %}
+<div class="body-content outer-top-vs" id="top-banner-and-menu">
+  <div class="container-fluid">
+    <div class="row" style="margin-left: 0px; margin-right: 0px">
+      <div class="col-xs-12 col-sm-12 col-md-12 rh-col">
+        <div class="card" style="box-shadow:none;">
+          <!-- Product Image and Info -->
+          <div class="row">
+            <div class="col-sm-4 product-imgs">
+              <div class="img-display">
+                <!-- Main Image Display -->
+                <div class="img-showcase">
+                  <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid" id="main-image" />
+                </div>
+                <!-- Thumbnail Gallery -->
+                <div class="gallery-preview-panel" style="margin-top: 10px;">
+                  <div class="gallery-preview-panel__content">
+                    <!-- Loop through extra images of the product -->
+                    {% for image in product.images.all %}
+                    <div class="gallery-thumbnail" style="display: inline-block; margin-right: 10px; cursor: pointer;">
+                      <img class="pdp-mod-common-image gallery-preview-panel__image" src="{{ image.url }}"
+                        alt="{{ product.name }}" style="width: 60px; height: 60px;"
+                        onclick="changeImage('{{ image.url }}')" />
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4 product-content">
+              <h6 class="product-title">{{ product.name }}</h6>
+              <!-- Display Average Rating and Total Ratings -->
+              <p>
+                <span class="star-rating">
+                  {% for i in "01234" %}
+                  {% if forloop.counter <= full_stars %}
+                  <i class="fas fa-star"></i> <!-- Filled Star -->
+                  {% elif forloop.counter == full_stars|add:1 and is_half_rating %}
+                  <i class="fas fa-star-half-alt"></i> <!-- Half Star -->
+                  {% else %}
+                  <i class="far fa-star"></i> <!-- Empty Star -->
+                  {% endif %}
+                  {% endfor %}
+                </span>
+                {{ total_ratings }} Ratings
+              </p>
+              <div class="product-price">
+                <p class="new-price">
+                  <span>৳.{{ product.disk_price }}</span>
+                </p>
+                <p style="display: flex">
+                  ৳.{{ product.price }}
+                  <span style="padding-left: 10px">
+                    {{ product.discount_percentage }}% OFF
+                  </span>
+                </p>
+              </div>
+              <div class="product-price">
+                <p class="new-price">Brand : <span>{{ product.brand }}</span></p>
+                <p class="last-price">{{ product.feature }}</p>
+              </div>
+
+              <!-- Quantity Box and Form -->
+              <form method="POST" action="{% url 'cart:add_to_cart' product.id %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <h6>Select Size : </h6>
+                  {% if product.sizes.count > 0 %}
+                  <div class="btn-group" role="group" aria-label="Size selection"
+                    style="padding: 10px;padding-left: 20px;">
+                    {% for size in product.sizes.all %}
+                    <input type="radio" class="btn-check" name="size" id="size_{{ size.id }}" value="{{ size.id }}"
+                      autocomplete="off" />
+                    <label class="btn btn-outline-primary" for="size_{{ size.id }}">{{ size.name }}</label>
+                    {% endfor %}
+                  </div>
+                  {% else %}
+                  <p>No size options available.</p>
+                  {% endif %}
+                </div>
+
+                <div class="mb-3" style="margin-bottom: 10px">
+                  <h6>Color : <span id="selectedColorName"></span></h6>
+                  {% if product.colors.count > 0 %}
+                  <div class="color" style="display: flex; display: flex; padding: 10px;padding-left: 20px;">
+                    {% for color in product.colors.all %}
+                    <div class="col" style="flex: 0 0 0%;">
+                      <input type="radio" name="color" id="color_{{ color.id }}" value="{{ color.id }}"
+                        style="display: none;" onclick="updateSelectedColor('{{ color.name }}');" />
+                      <div class="sku-variable-img"
+                        style="background-color:{{ color.code }}; width: 30px; height: 30px; margin-right: 10px;"
+                        onclick="document.getElementById('color_{{ color.id }}').checked = true; updateSelectedColor('{{ color.name }}');">
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                  {% else %}
+                  <p>No color options available.</p>
+                  {% endif %}
+                </div>
+
+                <script>
+                  function updateSelectedColor(colorName) {
+                    document.getElementById('selectedColorName').innerText = colorName;
+                  }
+                </script>
+              </form>
+
+            </div>
+            <!-- Related Products Section -->
+            <div class="col-sm-4 product-content">
+            <section class="container my-5">
+              <h3 class="mb-4">Related Products</h3>
+              <div class="row">
+                <!-- Product Card 1 -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img src="image1.jpg" class="card-img-top" alt="Product 1">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Product 1</h5>
+                      <p class="card-text">$19.99</p>
+                      <a href="#" class="btn btn-primary">Add to Cart</a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img src="image2.jpg" class="card-img-top" alt="Product 2">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Product 2</h5>
+                      <p class="card-text">$24.99</p>
+                      <a href="#" class="btn btn-primary">Add to Cart</a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img src="image3.jpg" class="card-img-top" alt="Product 3">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Product 3</h5>
+                      <p class="card-text">$29.99</p>
+                      <a href="#" class="btn btn-primary">Add to Cart</a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Product Card 4 -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img src="image4.jpg" class="card-img-top" alt="Product 4">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Product 4</h5>
+                      <p class="card-text">$34.99</p>
+                      <a href="#" class="btn btn-primary">Add to Cart</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for Quantity Increment/Decrement -->
+<script>
+  document.getElementById("button-increment").addEventListener("click", function () {
+    var quantityInput = document.getElementById("quantity");
+    quantityInput.value = parseInt(quantityInput.value) + 1;
+  });
+
+  document.getElementById("button-decrement").addEventListener("click", function () {
+    var quantityInput = document.getElementById("quantity");
+    var currentValue = parseInt(quantityInput.value);
+    if (currentValue > 1) {
+      quantityInput.value = currentValue - 1;
+    }
+  });
+
+  // Handle form submission based on button click
+  document.getElementById("add-to-cart-btn").addEventListener("click", function () {
+    document.getElementById("action_type").value = "add_to_cart";
+  });
+
+  document.getElementById("buy-now-btn").addEventListener("click", function () {
+    document.getElementById("action_type").value = "buy_now";
+  });
+</script>
+{% endblock %}

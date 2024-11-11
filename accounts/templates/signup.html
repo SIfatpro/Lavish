@@ -1,0 +1,181 @@
+{% extends 'Base.html' %} {% block title %}Book Shop | Sign Up{% endblock %} {%
+load static %} {% load socialaccount %} {% block content %}
+<style>
+  .error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+</style>
+<section class="login-container">
+  <div class="center">
+    <h2>Sign Up</h2>
+    <h3>
+      Already have an account?
+      <a href="{% url 'accounts:login' %}" class="login-link">Login Now!</a>
+    </h3>
+    <form id="signup-form" method="POST">
+      {% csrf_token %}
+      <!-- Full Name Field -->
+      <div class="field input-field">
+        <input
+          type="text"
+          name="user_name"
+          placeholder="Full Name"
+          autocomplete="given-name"
+          value="{{ request.POST.user_name }}"
+        />
+        <div id="user_name_error" class="error"></div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="field input-field">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          autocomplete="on"
+          value="{{ request.POST.email }}"
+        />
+        <div id="email_error" class="error"></div>
+      </div>
+
+      <!-- Phone Number Field -->
+      <div class="field input-field">
+        <input
+          type="text"
+          name="phone_number"
+          placeholder="Phone Number"
+          autocomplete="on"
+          value="{{ request.POST.phone_number }}"
+        />
+        <div id="phone_number_error" class="error"></div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="field input-field">
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          autocomplete="new-password"
+        />
+        <div id="password_error" class="error"></div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="field input-field">
+        <input
+          type="password"
+          name="confirm_password"
+          placeholder="Confirm Password"
+          autocomplete="new-password"
+        />
+        <div id="confirm_password_error" class="error"></div>
+      </div>
+
+      <!-- Terms Checkbox -->
+      <div class="custom-control custom-checkbox">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          id="chk_agree"
+          name="terms"
+        />
+        <label
+          class="custom-control-label"
+          for="chk_agree"
+          style="top: 3px; position: relative; font-size: 0.8rem"
+        >
+          I agree to the <a href="#">Terms of Use</a> and
+          <a href="#">Privacy Policy</a>
+        </label>
+      </div>
+      <div id="terms_error" class="error"></div>
+
+      <!-- Submit Button -->
+      <div class="input-field">
+        <button type="submit" class="info">Sign Up</button>
+      </div>
+    </form>
+
+    <span class="d-block text-center my-4 text-muted">OR</span>
+
+    <!-- Social Login Buttons -->
+    <div class="social-login">
+      <a href="{% url 'social:begin' 'facebook' %}" class="facebook">
+        <i class="fa fa-facebook" aria-hidden="true"></i>
+      </a>
+      <a href="{% url 'social:begin' 'google-oauth2' %}" class="google">
+        <i class="fa fa-google" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#signup-form").on("submit", function (event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      $.ajax({
+        type: "POST", // Specify the type of request
+        url: "{% url 'accounts:register' %}", // URL for the registration endpoint
+        data: $(this).serialize(), // Serialize form data for submission
+        dataType: "json", // Expect JSON response
+        success: function (response) {
+          // Handle successful response
+          if (response.status === "success") {
+            alert(response.message); // Show success message
+            // Redirect to OTP verification instead of login
+            window.location.href = "{% url 'accounts:verify_otp' 0 %}".replace(
+              "0",
+              response.user_id
+            ); // Replace '0' with the actual user_id
+          } else {
+            // In case the server returns success but there are other issues
+            alert(
+              "Registration successful, but unable to proceed. Please try again."
+            );
+          }
+        },
+        error: function (response) {
+          if (response.responseJSON && response.responseJSON.errors) {
+            const errors = response.responseJSON.errors; // Get error messages from response
+
+            // Clear previous errors from the page
+            $(".error").empty();
+
+            // Display each error message under the respective input field
+            if (errors.user_name) {
+              $("#user_name_error").html(errors.user_name.join(", ")); // Join multiple messages
+            }
+            if (errors.email) {
+              $("#email_error").html(errors.email.join(", ")); // Join multiple messages
+            }
+            if (errors.phone_number) {
+              $("#phone_number_error").html(errors.phone_number.join(", ")); // Join multiple messages
+            }
+            if (errors.password) {
+              $("#password_error").html(errors.password.join(", ")); // Join multiple messages
+            }
+            if (errors.confirm_password) {
+              $("#confirm_password_error").html(
+                errors.confirm_password.join(", ")
+              ); // Join multiple messages
+            }
+            if (errors.terms) {
+              $("#terms_error").html(errors.terms.join(", ")); // Join multiple messages
+            }
+          } else {
+            // Handle unexpected errors
+            alert("An unexpected error occurred. Please try again.");
+          }
+        },
+      });
+    });
+  });
+</script>
+
+{% endblock %}

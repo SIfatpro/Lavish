@@ -1,0 +1,217 @@
+{% extends 'Base.html' %}
+{% block title %}Book Shop | Home{% endblock %}
+{% load static %}
+{% load socialaccount %}
+
+{% block content %}
+<div class="body-content outer-top-vs" id="top-banner-and-menu">
+  <div class="container-fluid">
+    <div class="col-sm-12 recent-orders-hd" style="display: flex">
+      <!-- Left Navigation -->
+      <div class="col-sm-4 nav-1">
+        <ul class="nav nav-pills nav-stacked">
+          <li>
+            <a href="/accounts/user_accounts/">
+              <i class="fa-solid fa-user"></i><span>Account</span>
+            </a>
+          </li>
+          <li>
+            <a href="/accounts/user_order/">
+              <i class="fa fa-cart-arrow-down"></i><span>Orders</span>
+            </a>
+          </li>
+          <li>
+            <a href="/accounts/user_wishlist/">
+              <i class="fa fa-heart-o"></i><span>Wishlist</span>
+            </a>
+          </li>
+          <li>
+            <a href="/accounts/user_review/">
+              <i class="fa fa-star"></i><span>Reviews & Rating</span>
+            </a>
+          </li>
+          <li>
+            <a href="/accounts/user_coupon/">
+              <i class="fa fa-ticket"></i><span>My Coupons</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Profile Section -->
+      <div class="col-sm-8 profss-1">
+        <div class="col-sm-4 prof-1">
+          <div class="address-items">
+            <div class="dashboard-mod-title">
+              Personal Profile <span>|</span>
+              <a href="javascript:void(0);" id="editProfileBtn">EDIT</a>
+            </div>
+            <div class="dashboard-info">
+              <div class="dashboard-info-item">{{ user.user_name }}</div>
+              <div class="dashboard-info-item">{{ user.email }}</div>
+              <div class="dashboard-info-item">{{ user.phone_number }}</div>
+              <div class="dashboard-info-item last">
+                <a href="javascript:;" style="font-size: 1.2vw;">Subscribe to our Newsletter</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4 prof-2">
+          <div class="dashboard-address-list">
+            <!-- Shipping Address -->
+            <div class="address-item">
+              <div class="mod-title">
+                Address Book <span>|</span>
+                <a href="/address#/book">EDIT</a>
+              </div>
+              <ul class="address-list">
+                <li><strong>DEFAULT DELIVERY ADDRESS</strong></li>
+                <li>{{ shipping_address.user.user_name }}</li>  <!-- User's name -->
+                <li>{{ shipping_address.address_line }}</li>  <!-- Address line -->
+                <li style="display:flex;">
+                    <p>{{ shipping_address.area }} - </p>
+                    <p>{{ shipping_address.city }} - </p>                   
+                    <p>{{ shipping_address.division }}</p>
+                </li>
+                <li>(+88) {{ shipping_address.user.phone_number }}</li>  <!-- User's phone number -->
+            </ul>
+            </div>
+            <!-- Billing Address -->
+            <div class="address-item">
+              <div class="mod-title">
+                Address Book <span>|</span>
+                <a href="/address#/book">EDIT</a>
+              </div>
+              <ul class="address-list">
+                <li><strong>DEFAULT BILLING ADDRESS</strong></li>
+                <li>{{ billing_address.user.user_name }}</li>  <!-- User's name -->
+                <li>{{ billing_address.address_line }}</li>  <!-- Address line -->
+                <li style="display:flex;">
+                    <p>{{ billing_address.area }} - </p>
+                    <p>{{ billing_address.city }} - </p>                   
+                    <p>{{ billing_address.division }}</p>
+                </li>
+                <li>(+88) {{ billing_address.user.phone_number }}</li>  <!-- User's phone number -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="col-sm-12 recent-orders-hds">
+      <h2>Recent Orders</h2>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Order Id</th>
+            <th>Date</th>
+            <th>Item</th>
+            <th>Total</th>
+            <th>Manage Order</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>653012779851860</td>
+            <td>25/12/2023</td>
+            <td>john@example.com</td>
+            <td>৳ 697</td>
+            <td><a href="#">MANAGE</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div id="editProfileModal" class="modal" style="display: none;">
+  <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h2>Edit Profile</h2>
+      <form id="editProfileForm" method="post" action="{% url 'accounts:updateuser_accounts' %}">
+          {% csrf_token %}
+          <div>
+              <label for="user_name">User Name:</label>
+              <input type="text" name="user_name" value="{{ user.user_name }}" required>
+          </div>
+          <div>
+              <label for="email">Email:</label>
+              <input type="email" name="email" value="{{ user.email }}" required>
+          </div>
+          <div>
+              <label for="phone_number">Phone Number:</label>
+              <input type="text" name="phone_number" value="{{ user.phone_number }}" required>
+          </div>
+          <button type="submit">Update Profile</button>
+      </form>
+  </div>
+</div>
+
+
+<!-- Modal Styles -->
+<style>
+    /* Modal styles */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var modal = document.getElementById("editProfileModal");
+        var btn = document.getElementById("editProfileBtn");
+        var span = document.getElementById("closeModal");
+
+        // Open the modal when the edit button is clicked
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // Close the modal when the <span> (x) is clicked
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    });
+</script>
+{% endblock %}

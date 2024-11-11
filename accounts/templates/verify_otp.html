@@ -1,0 +1,55 @@
+{% extends 'Base.html' %} {% block content %}
+
+<div class="body-content outer-top-vs" id="top-banner-and-menu">
+  <div
+    class="container-fluid"
+    style="display: flex; align-items: center; justify-content: center"
+  >
+    <div
+      class="col-sm-12 recent-hd"
+      style="
+        width: 50%;
+        background-color: #fff;
+        padding: 10px;
+        margin-bottom: 20px;
+        background-color: #ffffff;
+        margin-bottom: 20px;
+      "
+    >
+      <div class="otp-verification">
+        <h2>Verify OTP</h2>
+
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="otp_code">Enter OTP Code:</label>
+            <input
+              type="text"
+              id="otp_code"
+              name="otp_code"
+              required
+              maxlength="6"
+              placeholder="Enter 6-digit OTP"
+              class="form-control"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Verify OTP</button>
+        </form>
+
+        <!-- Display any success or error messages -->
+        {% if messages %}
+        <div class="alert-messages">
+          <ul class="messages">
+            {% for message in messages %}
+            <li class="alert {{ message.tags }}">{{ message }}</li>
+            <!-- Display message with tags for styling -->
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

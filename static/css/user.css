@@ -1,0 +1,359 @@
+.profs {
+  width: 96.8%;
+  margin: 15px 12px;
+  background-color: white;
+}
+
+.prof {
+  width: 100%;
+  display: flex;
+}
+
+.prof-1,
+.prof-2 {
+  background-color: white;
+  line-height: 1.5;
+}
+
+.prof-1 {
+  width: 25%;
+  padding-top: 10px;
+  margin: 0 10px;
+}
+
+.prof-2 {
+  width: 75%;
+}
+
+.dashboard-address-list {
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.address-item {
+  width: 50%;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+}
+
+.mod-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.address-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.address-list li {
+  font-family: "Krub", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #484848;
+}
+
+.address-list li strong {
+  color: #424242;
+  font-size: 0.63rem;
+}
+
+.middlenav {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.middlenav h2 {
+  text-align: center;
+  font-family: "Krub", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 100;
+  border-bottom: 1px solid #edeeef;
+  padding-bottom: 5px;
+}
+
+.nav-1 {
+  margin-left: 13px;
+  width: 20%;
+  padding: 0;
+  background-color: #ffffff;
+}
+
+.nav-1 ul {
+  padding: 20px 0;
+}
+
+.nav-1 ul li {
+  width: 100%;
+  padding: 10px 0;
+}
+
+.nav-1 ul li:hover {
+  background-color: #607d8b;
+}
+
+.nav-1 ul li a {
+  width: 100%;
+  text-decoration: none;
+}
+
+.nav-1 ul li span {
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+}
+
+.nav-1 ul li:hover a,
+.nav-1 ul li:hover i,
+.nav-1 ul li:hover span {
+  color: #fff;
+}
+
+.nav-stacked a {
+  padding: 15px 20px;
+}
+
+.nav-stacked span {
+  padding-left: 10px;
+  color: black;
+  font-family: "Barlow", sans-serif;
+  letter-spacing: 0.2px;
+  font-size: 20px;
+}
+
+.nav-stacked i {
+  padding-left: 20px;
+  color: black;
+  font-size: 20px;
+}
+
+/* Basic table styling */
+.styled-table {
+  border-collapse: collapse;
+  font-size: 18px;
+  font-family: Arial, sans-serif;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table thead tr {
+  background-color: #607d8b;
+  color: #ffffff;
+  text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 10px 15px;
+  font-size: 0.8rem;
+}
+
+.styled-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.styled-table tbody tr.active-row {
+  font-weight: bold;
+  color: #626363;
+}
+
+.order {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.profss-1 {
+  display: flex;
+  width: 76.8%;
+  padding: 20px;
+  margin: 0 10px;
+  background-color: #fff;
+}
+
+.subTitle {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  font-size: 16px;
+  color: #666;
+  align-items: center;
+  justify-content: center;
+  margin: 0px;
+}
+
+/* Styles for the order view options */
+.orderViewOpts {
+  margin-left: 330px;
+  padding-top: 5px;
+  list-style-type: none; /* Remove default list styles */
+}
+
+.orderViewOpts li {
+  display: flex; /* Flexbox for label and select alignment */
+  align-items: center; /* Vertically center items */
+  margin-right: 20px; /* Space between items */
+}
+
+/* Styles for option labels */
+.optLabel {
+  font-size: 15px;
+  font-weight: 500;
+  color: #444546; /* Color for labels */
+  margin-right: 5px; /* Space between label and select */
+}
+
+/* Select input styles */
+.selectInput {
+  line-height: 22px; /* Height of the select input */
+  margin-top: -5px; /* Adjust position */
+  padding: 5px; /* Space inside select */
+  border: 1px solid #ccc; /* Border for the select */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #fff; /* White background */
+  color: #333; /* Dark text color */
+}
+
+/* Styles for the order table */
+#orderTable {
+  margin-top: 10px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Header row styles */
+.orderTH {
+  display: flex;
+  background-color: #f8f8f8; /* Light gray background */
+  font-weight: bold;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+
+/* Column styles */
+.orderTD {
+  width: 15%;
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  font-size: 14px;
+  color: #444;
+}
+
+/* Optional: Add hover effect for table rows */
+.orderT:hover {
+  background-color: #f1f1f1;
+}
+
+.orderPayStat,
+.orderStat {
+  width: 10%;
+}
+
+.body-content {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+  margin: 20px;
+}
+
+html,
+body {
+  overflow-x: hidden; /* Prevent horizontal scrolling globally */
+}
+
+.middlenavs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+.orderViewOpts {
+  display: flex;
+  justify-content: flex-end; /* Align options to the right */
+  gap: 15px; /* Space between filters */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.orderViewOpts li {
+  display: flex;
+  align-items: center;
+}
+
+.optLabel {
+  font-size: 15px;
+  font-weight: 500;
+  color: #444546;
+  margin-right: 5px;
+}
+
+.selectInput {
+  line-height: 22px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+}
+
+#orderTable {
+  margin-top: 10px; /* Space above the table */
+}
+
+.orderTH {
+  display: flex;
+  background-color: #f8f8f8;
+  font-weight: bold;
+  border-bottom: 2px solid #ddd;
+}
+
+.orderTD {
+  width: 15%;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.orderPayStat {
+  width: 10%;
+}
+
+.recent-orders-hd h2 {
+  text-align: center;
+  padding-top: 10px;
+  font-size: 1.5rem;
+  font-family: serif;
+}
+.recent-orders-hds {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 13px;
+  width: 97.6%;
+  background-color: white;
+}
+.recent-orders-hds h2 {
+  text-align: center;
+  padding-top: 10px;
+  font-size: 1.5rem;
+  font-family: serif;
+}
+.address-items {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+}

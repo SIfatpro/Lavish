@@ -1,0 +1,472 @@
+{% extends 'Base.html' %}
+{% block title %} Book Shop | Home {% endblock %}
+{% load static %}
+{% block content %}
+<style>
+  /* Container for product gallery */
+  .product-gallery {
+    display: flex;
+    flex-direction: column;
+    /* Stacks the primary and secondary images */
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  /* Primary image styling */
+  .primary-image {
+    width: 100%;
+    /* Make it responsive */
+    max-width: 500px;
+    /* Set a max width */
+    margin-bottom: 10px;
+    /* Space between primary and secondary images */
+  }
+
+  .primary-image img {
+    width: 100%;
+    /* Image takes full width */
+    height: auto;
+    /* Maintain aspect ratio */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow effect */
+  }
+
+  /* Secondary images styling */
+  .secondary-images {
+    display: flex;
+    /* Display thumbnails in a row */
+    flex-wrap: wrap;
+    /* Allow wrapping */
+    gap: 10px;
+    /* Space between thumbnails */
+    justify-content: center;
+    /* Center thumbnails */
+  }
+
+  .thumbnail {
+    width: 70px;
+    /* Thumbnail size */
+    height: 70px;
+    /* Thumbnail size */
+    overflow: hidden;
+    /* Hide overflow */
+    border-radius: 4px;
+    /* Slightly rounded corners */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    transition: transform 0.3s;
+    /* Smooth scale effect */
+  }
+
+  .thumbnail:hover {
+    transform: scale(1.1);
+    /* Scale effect on hover */
+  }
+
+  .thumbnail img {
+    width: 100%;
+    /* Image takes full width of the thumbnail */
+    height: auto;
+    /* Maintain aspect ratio */
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .thumbnail {
+      width: 50px;
+      /* Smaller thumbnails on mobile */
+      height: 50px;
+    }
+
+    .primary-image {
+      max-width: 100%;
+      /* Ensure primary image is fully responsive */
+    }
+  }
+
+  .product-gallery {
+    position: relative;
+  }
+
+  .carousel-control {
+    position: absolute;
+    top: 90%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    width: 32px;
+    height: 32px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .carousel-control-prev-icon:hover,
+  .carousel-control-next-icon:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  .mb-3 h6 {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    color: #424242;
+  }
+
+  .quant-in h6 {
+    margin-right: 10px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    color: #424242;
+    font-size: 1.2vw;
+  }
+
+  .cart-add {
+    display: flex;
+    height: 8%;
+    width: 30%;
+    -moz-box-align: center;
+    align-items: center;
+    -moz-box-pack: center;
+    justify-content: center;
+    font-size: 1.2vw;
+    font-weight: 500;
+    margin: 0px;
+    line-height: 21px;
+    color: #4A4A4A;
+    text-transform: capitalize;
+    border: 1px solid rgb(222, 222, 222);
+    background-color: #F2B230;
+    letter-spacing: 0px;
+    position: relative;
+    transition: 0.5s;
+    border-radius: 0px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+</style>
+<div class="body-content outer-top-vs" id="top-banner-and-menu">
+  <div class="container-fluid">
+    <div class="row" style="margin-left: 0px; margin-right: 0px">
+      <div class="col-xs-12 col-sm-12 col-md-12 rh-col">
+        <div class="card" style="box-shadow:none; margin:0px;">
+          <div class="row" style="margin-bottom:20px;">
+            <div class="col-sm-4 product-imgs">
+              <div class="img-display">
+                <div class="product-images">
+                  <div class="product-gallery">
+                    <div class="primary-image">
+                      <img
+                        src="{% if primary_image %}{{ primary_image.image.url }}{% else %}{% static 'path/to/default-image.jpg' %}{% endif %}"
+                        alt="{{ product.name }} Primary Image" class="img-fluid"
+                        onerror="this.onerror=null;this.src='{% static 'path/to/default-image.jpg' %}';" />
+                    </div>
+                    <div class="secondary-images">
+                      {% for image in secondary_images %}
+                      <div class="thumbnail">
+                        <img src="{{ image.image.url }}" alt="{{ product.name }} Secondary Image"
+                          class="img-fluid thumbnail-image"
+                          onerror="this.onerror=null;this.src='{% static 'path/to/default-image.jpg' %}';" />
+                      </div>
+                      {% empty %}
+                      <p>No secondary images available.</p>
+                      {% endfor %}
+                    </div>
+                    <div class="carousel-control">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4 product-content">
+              <h6 class="product-title">{{ product.name }}</h6>
+              <p>
+                <span class="star-rating">
+                  {% for i in "01234" %}
+                  {% if forloop.counter <= full_stars %}
+                  <i class="fas fa-star"></i>
+                  {% elif forloop.counter == full_stars|add:1 and is_half_rating %}
+                  <i class="fas fa-star-half-alt"></i>
+                  {% else %}
+                  <i class="far fa-star"></i>
+                  {% endif %}
+                  {% endfor %}
+                </span>
+                {{ total_ratings }} Ratings
+              </p>
+              <div class="product-price">
+                {% if product.disk_price %}
+                <!-- Show both discounted and original price if discount is available -->
+                <p class="new-price">
+                  <span>৳.{{ product.disk_price }}</span>
+                </p>
+                <p style="display: flex">
+                  ৳.{{ product.price|floatformat:0 }}
+                  <span style="padding-left: 10px">
+                    {{ product.discount_percentage }}% OFF
+                  </span>
+                </p>
+                {% else %}
+                <!-- Show only the regular price if no discount is available -->
+                <p class="new-price">
+                  <span>৳.{{ product.price|floatformat:0 }}</span>
+                </p>
+                {% endif %}
+              </div>
+              <div class="product-price">
+                <p class="new-price">
+                  Brand : <span style="font-size:1.2vw;">{{ product.brand }}</span>
+                </p>
+                <p class="last-price">{{ product.feature }}</p>
+              </div>
+              {% if product.sizes.count > 0 or product.colors.count > 0 %}
+              {% if product.sizes.count > 0 %}
+              <div class="mb-3" style="margin: 0 !important;">
+                <h6>Select Size : </h6>
+                <div class="btn-group" role="group" aria-label="Size selection"
+                  style="padding: 10px;padding-left: 20px;">
+                  {% for size in product.sizes.all %}
+                  <input type="radio" class="btn-check" name="size" id="size_{{ size.id }}" value="{{ size.id }}"
+                    autocomplete="off" />
+                  <label class="btn btn-outline-primary" for="size_{{ size.id }}">{{ size.name }}</label>
+                  {% endfor %}
+                </div>
+              </div>
+              {% else %}
+              <p>No size options available.</p>
+              {% endif %}
+
+              {% load custom_filters %}
+              {% if product.colors.count > 0 %}
+              <div class="mb-3">
+                <h6>Color family: <span id="selectedColorName"></span></h6>
+                <div class="color" style="display: flex; padding: 10px; padding-left: 20px;">
+                  {% for color in product.colors.all %}
+                  <div class="col" style="flex: 0 0 0%;">
+                    <input type="radio" name="color" id="color_{{ color.id }}" value="{{ color.id }}"
+                      style="display: none;"
+                      onclick="updateSelectedColor('{{ color.name }}'); updateProductImage('{{ color.id }}');" />
+                    <label for="color_{{ color.id }}">
+                      {% if color_images|get_item:color.id %}
+                      <img src="{{ color_images|get_item:color.id }}" alt="{{ color.name }} image"
+                        style="width: 40px; height: 40px; margin-right: 10px;">
+                      {% else %}
+                      <span>No image available</span>
+                      {% endif %}
+                    </label>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% else %}
+              <p>No color options available.</p>
+              {% endif %}
+              {% else %}
+              <p>This product has no size or color variants available.</p>
+              {% endif %}
+
+              <!-- Quantity Box and Add to Cart Button -->
+              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+              <div class="input-group quant-in" style="max-width: 200px; margin-bottom:20px;">
+                <h6 style="margin-right: 10px">Quantity : </h6>
+                <button class="btn btn-outline-secondary" type="button" id="button-decrement"
+                  style="border-radius: 0px;border: 1px solid gainsboro;top: 1%;right: 1%; font-weight: 600; font-size: 2vw; padding-top: 0px;padding-bottom: 0px;font-family: 'Roboto', sans-serif;">-</button>
+                <input type="number" name="quantity" id="quantity" class="form-control text-center" min="1" value="1"
+                  style="-webkit-appearance: none;-moz-appearance: textfield;" />
+                <button class="btn btn-outline-secondary" type="button" id="button-increment"
+                  style="border-radius: 0px;border: 1px solid gainsboro;top: 1%;left: 1%; font-weight: 600; font-size: 2vw; padding-top: 0px;padding-bottom: 0px;font-family: 'Roboto', sans-serif;">+</button>
+              </div>
+
+              <button type="button" class="cart-add" id="add-to-cart-btn" data-product-id="{{ product.id }}">Add
+                to Cart</button>
+            </div>
+            <div class="col-sm-4 delivery-details">
+              <div class="delivery-service">
+                <strong>Delivery</strong>
+                <div class="delivery__header" bis_skin_checked="1">
+                  <div class="location delivery__location" bis_skin_checked="1">
+                    <div class="location__current" bis_skin_checked="1">
+                      <div class="location__body" bis_skin_checked="1">
+                        <span style="display: flex;"><i class="fa fa-map-marker" aria-hidden="true"
+                            style="font-size:2rem;"></i>
+                          <p>Dhaka, Dhaka - North, Akij
+                            Foundation</p>
+                          <a class="location-link location-link_size_xs automation-location-link-change">CHANGE</a>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="delivery-option-item__body">
+                  <div class="delivery-option-item__shipping-fee">
+                    <div class="delivery-options">
+                      <div class="option">
+                        <div class="delivery-option-item-body" style="display:flex;">
+                          <div class="delivery-option-item-title">
+                            <p class="delivery-option-item-time" style="margin: 0px;">Standard Delivery</p>
+                            <p class="delivery-option-item-time" style="font-size: 1vw;">Guaranteed by 5-9 Nov</p>
+                          </div>
+                          <div class="delivery-option-item-shipping-fee" style="padding-left: 141px;">৳ 150</div>
+                        </div>
+                        <ul class="option-ser"><strong>Service</strong>
+                          <li><img src="/static/media/cash-on-delivery.png" alt="">Cash on Delivery Available</li>
+                          <li><img src="/static/media/7-days.png" alt="">7 Day Return</li>
+                          <li><img src="/static/media/warranty.png" alt="">Warranty not available</li>
+                          <li><img src="/static/media/tps-80.png" alt="">100% Authentic from Trusted Brand</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for Quantity Increment/Decrement and AJAX Add to Cart -->
+<script>
+  // Function to update the selected variant text on the page
+  function updateSelectedVariant(variantType, variantId) {
+    const selectedVariant = document.querySelector(`input[name="${variantType}"][value="${variantId}"]`);
+    const variantLabel = selectedVariant ? selectedVariant.nextElementSibling :
+    null; // Get the label next to the radio button
+    const variantText = variantLabel ? variantLabel.textContent.trim() :
+    ''; // The variant's display name (e.g., L, Red)
+
+    const variantElement = document.getElementById(
+      `selected${variantType.charAt(0).toUpperCase() + variantType.slice(1)}`);
+    if (variantElement) {
+      variantElement.innerText = variantText; // Update the text with the selected variant name
+    } else {
+      console.error(
+        `Element with ID 'selected${variantType.charAt(0).toUpperCase() + variantType.slice(1)}' not found.`);
+    }
+
+    // Log the selected variant in the console in the format "Size: L"
+    console.log(`${variantType.charAt(0).toUpperCase() + variantType.slice(1)}: ${variantText}`);
+  }
+
+  // Function to update the selected color name on the page
+  function updateSelectedColor(colorName) {
+    const colorElement = document.getElementById('selectedColorName');
+    if (colorElement) {
+      colorElement.innerText = colorName; // Update color name display
+    } else {
+      console.error('Element with ID "selectedColorName" not found.');
+    }
+
+    // Log the selected color in the console
+    console.log(`Selected color: ${colorName}`);
+  }
+
+  // Function to update product images based on selected color
+  function updateProductImage(selectedColorId) {
+    const allImages = document.querySelectorAll('.product-image');
+    allImages.forEach(image => {
+      image.style.display = 'none';
+    });
+
+    const selectedImages = document.querySelectorAll(`.product-image[data-color="${selectedColorId}"]`);
+    selectedImages.forEach(image => {
+      image.style.display = 'block';
+    });
+  }
+
+  // Increment quantity
+  document.getElementById("button-increment").addEventListener("click", function () {
+    const quantityInput = document.getElementById("quantity");
+    quantityInput.value = parseInt(quantityInput.value) + 1;
+  });
+
+  // Decrement quantity
+  document.getElementById("button-decrement").addEventListener("click", function () {
+    const quantityInput = document.getElementById("quantity");
+    const currentValue = parseInt(quantityInput.value);
+    if (currentValue > 1) {
+      quantityInput.value = currentValue - 1;
+    }
+  });
+
+  // Add to Cart functionality
+  document.getElementById("add-to-cart-btn").addEventListener("click", function (event) {
+    event.preventDefault();
+
+    const productId = this.getAttribute("data-product-id");
+    const quantity = parseInt(document.getElementById("quantity").value);
+    const csrfToken = document.querySelector("input[name='csrfmiddlewaretoken']").value;
+
+    let requestData = {
+      product_id: productId,
+      quantity: quantity
+    };
+    let selectedVariantsText = '';
+
+    const variantTypes = ['size', 'color', 'material'];
+    variantTypes.forEach(variantType => {
+      const selectedVariant = document.querySelector(`input[name="${variantType}"]:checked`);
+      if (selectedVariant) {
+        requestData[`${variantType}_id`] = selectedVariant.value;
+
+        const variantLabel = document.querySelector(`label[for="${selectedVariant.id}"]`);
+        const selectedVariantText = variantLabel ? variantLabel.textContent.trim() : selectedVariant.value;
+
+        selectedVariantsText +=
+          `${variantType.charAt(0).toUpperCase() + variantType.slice(1)}: ${selectedVariantText} `;
+      }
+    });
+
+    const selectedVariantsElement = document.getElementById('selectedVariants');
+    if (selectedVariantsElement) {
+      selectedVariantsElement.innerText = selectedVariantsText.trim();
+    }
+
+    console.log(selectedVariantsText.trim());
+
+    fetch(`/cart/add/${productId}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken
+        },
+        body: JSON.stringify(requestData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.cart_item_count !== undefined) {
+          const cartCountElement = document.querySelector("#cart-item-count");
+          if (cartCountElement) {
+            cartCountElement.textContent = data.cart_item_count;
+          }
+          alert("Product added to cart successfully!");
+        } else if (data.error) {
+          console.error("Error adding to cart:", data.error);
+        }
+      })
+      .catch(error => console.error("Error adding to cart:", error));
+  });
+</script>
+
+
+
+
+{% endblock %}

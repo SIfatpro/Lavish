@@ -1,0 +1,147 @@
+.login-container {
+  background-color: #fff;
+  width: 50%;
+  margin: 20px auto;
+  border-radius: 8px;
+  box-shadow: #495057;
+}
+.center h2 {
+  text-align: center;
+  border-bottom: 1px solid #d2d1d1;
+  padding: 10px 0px 10px 0px;
+  font-family: sans-serif;
+}
+
+.center h3 {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
+.center a {
+  padding-left: 5px;
+}
+.center form {
+  padding: 0px 120px;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+.input-field input {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 0;
+  display: block;
+  width: 100%;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border-bottom: 1px solid #ced4da;
+}
+.input-field button {
+  width: 100%;
+  line-height: 2;
+  border: none;
+  color: white;
+  background-color: #157ed2;
+  padding: 5px 5px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 6px;
+}
+.input-field i {
+  top: 24px;
+  font-size: 1.8rem;
+  position: relative;
+}
+.social-login {
+  text-align: center;
+  position: relative;
+}
+.social-login a {
+  text-decoration: none;
+  position: relative;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.social-login a i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 1rem;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+.social-login a:hover {
+  color: #fff;
+}
+.social-login a.facebook {
+  background: #3b5998;
+}
+.social-login a.facebook:hover {
+  background: #344e86;
+}
+.social-login a.twitter {
+  background: #1da1f2;
+}
+.social-login a.twitter:hover {
+  background: #0d95e8;
+}
+.social-login a.google {
+  background: #ea4335;
+}
+.social-login a.google:hover {
+  background: #e82e1e;
+}
+.d-block {
+  font-family: sans-serif;
+  margin: auto;
+  position: relative;
+  width: 62%;
+  text-align: center;
+}
+.d-block::before {
+  content: "";
+  display: block;
+  height: 1px;
+  background: #646464;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 45%;
+  z-index: 2;
+}
+.d-block::after {
+  content: "";
+  display: block;
+  height: 1px;
+  background: #646464;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 45%;
+  z-index: 2;
+}
+.form-check a {
+  float: right;
+  font-weight: 600;
+}
+.text-left{
+  position: absolute;
+  top:30%;
+  left: 30%;
+}
+

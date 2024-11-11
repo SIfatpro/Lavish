@@ -1,0 +1,239 @@
+{% extends 'Base.html' %}
+{% block title %}Book Shop | Cart{% endblock %}
+{% load static %}
+{% block content %}
+<style>
+  input[type="number"] {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+</style>
+<div class="body-content outer-top-vs" id="top-banner-and-menu">
+  <div class="container-fluid">
+    <div class="row" style="margin-left: 0px; margin-right: 0px;">
+      <div class="col-sm-12" style="display: flex; margin-bottom: 15px;">
+        <!-- Cart Items Section -->
+        <div class="col-sm-8 cart-1">
+          <div class="carts">
+            <h2>Cart Items ({{ total_items }})</h2>
+          </div>
+          <div class="container" style="display:flex">
+            <div id="cart" class="cart-items-wrapper">
+              {% for item in cart_items %}
+              <div class="cart-item border-bottom py-3 d-flex flex-wrap justify-content-between"
+                data-item-id="{{ item.id }}">
+                <!-- Product Image -->
+                <div class="cart-item-image flex-shrink-0" style="width: 10%; padding-right: 10px;">
+                  {% if item.product_variant %}
+                  {% with item.product_variant.product.primary_image as primary_image %}
+                  {% if primary_image %}
+                  <img src="{{ primary_image.image.url }}" alt="{{ item.product_variant.product.name }}"
+                    class="img-fluid">
+                  {% else %}
+                  <span>No image available</span>
+                  {% endif %}
+                  {% endwith %}
+                  {% else %}
+                  {% with item.product.primary_image as primary_image %}
+                  {% if primary_image %}
+                  <img src="{{ primary_image.image.url }}" alt="{{ item.product.name }}" class="img-fluid">
+                  {% else %}
+                  <span>No image available</span>
+                  {% endif %}
+                  {% endwith %}
+                  {% endif %}
+                </div>
+                <!-- Product Details -->
+                <div class="cart-item-details flex-grow-1" style="width: 40%;">
+                  <h5 class="product-name mb-2">
+                    {% if item.product_variant %}
+                    {{ item.product_variant.product.name }}
+                    {% else %}
+                    {{ item.product.name }}
+                    {% endif %}
+                  </h5>
+                </div>
+                <!-- Product Price -->
+                <div class="product-price mb-2" style="width: 13%">
+                  ৳
+                  {% if item.product_variant %}{{ item.product_variant.product.price|floatformat:0 }}{% else %}{{ item.product.price|floatformat:0 }}{% endif %}
+                </div>
+                <!-- Quantity and Subtotal -->
+                <div class="cart-item-quantity-price d-flex flex-column align-items-center" style="width: 15%;">
+                  <!-- Quantity -->
+                  <form action="{% url 'cart:update_cart' item.id %}" method="post"
+                    class="quantity-form d-flex align-items-center mb-2">
+                    {% csrf_token %}
+                    <button type="button" class="qtyminus btn btn-sm btn-outline-secondary"
+                      aria-hidden="true">&minus;</button>
+                    <input type="number" name="qty" value="{{ item.quantity }}"
+                      class="qty form-control text-center mx-1" min="1" max="10"
+                      style="width: 45px;-webkit-appearance: none;-moz-appearance: textfield;height: 30px;border-radius: 0px;" />
+                    <button type="button" class="qtyplus btn btn-sm btn-outline-secondary"
+                      aria-hidden="true">&plus;</button>
+                  </form>
+                </div>
+                <!-- Hidden Price Field -->
+                <input type="hidden" class="item-price"
+                  value="{% if item.product_variant %}{{ item.product_variant.product.price }}{% else %}{{ item.product.price }}{% endif %}">
+                <!-- Subtotal Display -->
+                <div class="subtotal font-weight-bold mb-0" style="width:12%; padding-left: 20px;">
+                  ৳ {{ item.total_price|floatformat:0 }}
+                </div>
+                <!-- Remove Button -->
+                <div class="cart-item-remove text-center" style="width:10%; padding-left: 15px;">
+                  <a href="{% url 'cart:remove_from_cart' item.id %}" class="text-danger small">Remove</a>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="but-1">
+            <a href="{% url 'cart:checkout' %}" class="btn btn-outline-secondary">Proceed To Checkout</a>
+          </div>
+        </div>
+        <!-- Checkout Summary Section -->
+        <div class="col-sm-4 cart-2">
+          <section id="checkout-sidebar">
+            <div class="checkout-sidebar__header">
+              <h2>Checkout Summary</h2>
+            </div>
+            <div class="checkout-sidebar__content">
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td>Subtotal</td>
+                    <td class="text-right" id="subtotal">৳ {{ cart_total|floatformat:0 }}</td>
+                  </tr>
+                  <tr style="display: none" id="discounttr2">
+                    <td id="discounttext2">Discount</td>
+                    <td class="text-right" id="discount2">৳ 0</td> <!-- Set initial discount to 0 -->
+                  </tr>
+                  <tr style="display: none" id="wrappertr2">
+                    <td id="wrappertext2">Gift Wrap</td>
+                    <td class="text-right" id="wrapper2">৳ 20</td>
+                  </tr>
+                  <tr>
+                    <td>Shipping</td>
+                    <td class="text-right" id="shipping">৳ 40</td>
+                  </tr>
+                  <tr>
+                    <td>Total</td>
+                    <td class="text-right" id="total">৳ {{ grand_total|floatformat:0 }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- Apply Coupon Section -->
+              <div class="apply-coupon" style="display:flex; margin-top: 20px;">
+                <input type="text" id="coupon_code" name="coupon_code" placeholder="Enter coupon code"
+                  class="form-control" style="width: 60%; border-radius: 0;">
+                <button id="apply_coupon_btn" class="btn btn-primary"
+                  style="border-radius: 0; font-size: 1vw; width: 15%;">Apply</button>
+              </div>
+              <div id="coupon_message" class="text-success mt-2">
+                {% if discount_amount > 0 %}
+                Coupon applied! You saved ৳ {{ discount_amount }}.
+                {% elif coupon_message %}
+                {{ coupon_message }}
+                {% endif %}
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    const updateCartSummary = (totalItems, subtotal, grandTotal) => {
+      // Use Math.floor() to ensure whole numbers
+      $('#subtotal').text(`৳ ${Math.floor(subtotal)}`); // Round down to whole number
+      $('#total').text(` ৳ ${Math.floor(grandTotal)}`);
+      $(".basket-item-count p").text(totalItems); // Update cart item count display
+    };
+
+    // Handle quantity adjustments
+    $(document).on("click", ".qtyminus, .qtyplus", function (e) {
+      e.preventDefault();
+      const form = $(this).closest(".quantity-form");
+      const itemId = form.closest(".cart-item").data("item-id");
+      const qtyInput = form.find(".qty");
+      let newQty = parseInt(qtyInput.val());
+
+      // Adjust quantity based on button clicked
+      if ($(this).hasClass("qtyminus") && newQty > 1) {
+        newQty -= 1;
+      } else if ($(this).hasClass("qtyplus") && newQty < 10) {
+        newQty += 1;
+      }
+      qtyInput.val(newQty);
+
+      // AJAX call to update cart
+      $.ajax({
+        url: `/cart/update-cart/${itemId}/`,  // Ensure this URL matches your Django URL configuration
+        method: 'POST',
+        data: {
+          qty: newQty,
+          csrfmiddlewaretoken: '{{ csrf_token }}' // Include CSRF token for security
+        },
+        success: function (response) {
+          if (response.success) {
+            // Update the cart summary with the new values
+            updateCartSummary(response.total_cart_count, response.subtotal, response.grand_total);
+            const itemSubtotal = parseFloat(form.closest(".cart-item").find(".item-price").val()) * newQty;
+            form.closest(".cart-item").find(".subtotal").text(`৳ ${Math.floor(itemSubtotal)}`); // Use Math.floor to remove decimals
+          } else {
+            alert(response.message);  // Handle any error messages
+          }
+        },
+        error: function (xhr) {
+          console.error(xhr.responseText);
+          alert("An error occurred while updating the cart. Please try again."); // General error message
+        }
+      });
+    });
+
+    $('#apply_coupon_btn').on('click', function (event) {
+      event.preventDefault(); // Prevent form submission
+    
+      const couponCode = $('#coupon_code').val();
+      $.ajax({
+        type: 'POST',
+        url: '{% url "cart:apply_coupon" %}', // Adjust URL to match your view for applying coupons
+        data: {
+          coupon_code: couponCode,
+          csrfmiddlewaretoken: '{{ csrf_token }}' // Include CSRF token for security
+        },
+        success: function (response) {
+          if (response.success) {
+            $('#subtotal').text(`৳ ${Math.floor(response.new_subtotal)} `);// Use Math.floor to ensure no decimals
+            $('#total').text(`৳ ${Math.floor(response.new_total)}`); // Update total as well
+            $('#coupon_message').text(response.message)
+              .removeClass('text-danger').addClass('text-success');
+          } else {
+            $('#coupon_message').text(response.error)
+              .removeClass('text-success').addClass('text-danger');
+          }
+        },
+        error: function (xhr) {
+          $('#coupon_message').text('Coupon has already been used by this user.')
+            .removeClass('text-success').addClass('text-danger');
+          console.error(xhr.responseText);
+        }
+      });
+    });       
+  });
+</script>
+
+{% endblock %}

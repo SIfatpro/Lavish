@@ -1,0 +1,71 @@
+{% extends 'Base.html' %} {% block title %}Book Shop | Home{% endblock %} {%
+load static %} {% load socialaccount %} {% block content %}
+<div class="body-content outer-top-vs" id="top-banner-and-menu">
+  <div class="container-fluid">
+    <div class="col-sm-12 recent-orders-hd" style="display: flex">
+      <div class="col-sm-4 nav-1">
+        <ul class="nav nav-pills nav-stacked">
+          <li>
+            <a href="/accounts/user_accounts/">
+              <i class="fa-solid fa-user"></i><span>Account</span>
+            </a>
+          </li>
+          <li>
+            <a href="/accounts/user_order/">
+              <i class="fa fa-cart-arrow-down"></i><span>Orders</span>
+            </a>
+          </li>
+          <li>
+            <a href="/accounts/user_wishlist/">
+              <i class="fa fa-heart-o"></i><span>Wishlist</span>
+            </a>
+          </li>
+          <li>
+            <a href="/accounts/user_review/">
+              <i class="fa fa-star"></i><span>Reviews & Rating</span>
+            </a>
+          </li>
+          <li>
+            <a href="/accounts/user_coupon/">
+              <i class="fa fa-ticket"></i><span>My Coupons</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm-8 profss-1">
+        <div class="middlenav" style="min-height: 733px; margin-bottom: 30px">
+          <h1
+            style="
+              font-family: 'Krub', sans-serif;
+              font-size: 30px;
+              font-weight: 100;
+              padding-bottom: 10px;
+              padding-left: 25px;
+              padding-top: 30px;
+            "
+          >
+            My Reviews
+          </h1>
+          <table class="table table-bordered">
+            <tr>
+              <th>Book Name</th>
+              <th>Review</th>
+              <th style="width: 170px">Date</th>
+            </tr>
+            {% for r in review_list %}
+            <tr>
+              <td style="font-size: 13px">{{ r.book_name }}</td>
+              <td style="font-size: 13px">{{ r.review }}</td>
+              <td>
+                <p style="font-size: 12px">{{ r.add_date }}</p>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,778 @@
+{% extends 'Base.html' %} {% block title %} Home {% endblock %} {% load static%}
+{% block content %}
+<style>
+  /* Reset some default browser styles */
+  /* General product grid layout */
+
+  .products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Updated product box for better responsive behavior */
+  .product-box {
+    flex: 1 0 calc(25% - 20px);
+    /* Adjust for margin */
+    margin: 10px;
+    background-color: #f9f9f9;
+    border-radius: 2px;
+    padding: 10px;
+    text-align: center;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+  }
+
+  .product-box:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .img-box {
+    width: 100%;
+    height: 150px;
+    /* Ensures uniform height for all images */
+    overflow: hidden;
+  }
+
+  .img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Ensures image fits nicely inside the box */
+  }
+
+  .thumb-content {
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .thumb-content h4 {
+    font-size: 1vw;
+    line-height: 18px;
+    font-family: "Roboto", sans-serif;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    padding-top: 5px;
+    padding-bottom: 2px;
+    text-align: center;
+    font-weight: 400;
+    letter-spacing: 1px;
+  }
+
+  .item-price span {
+    font-weight: 400;
+    font-size: 1.3vw;
+    color: #191970;
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .product-image {
+    position: relative;
+  }
+
+  .product-image .image img {
+    width: 100%;
+    height: auto;
+  }
+
+  .product-info {
+    padding: 15px;
+  }
+
+  .product-price {
+    font-weight: bold;
+    color: #28a745;
+  }
+
+  /* Pagination */
+  .pagination-container {
+    margin: 20px 0;
+  }
+
+  .pagination-container ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .pagination-container ul li {
+    display: inline;
+    margin: 0 5px;
+  }
+
+  .pagination-container ul li a {
+    text-decoration: none;
+    color: #007bff;
+  }
+
+  .pagination-container ul li.active a {
+    font-weight: bold;
+    color: #000;
+  }
+
+  .lbl-cnt {
+    display: flex;
+    align-content: center;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 60%;
+  }
+
+  .star-rating i {
+    font-size: 0.7rem;
+    color: #ffc000;
+  }
+
+  .list-unstyled {
+    display: flex;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0px;
+    padding-left: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .list-unsty {
+    display: flex;
+    "
+align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .list-unsty li {
+    display: flex;
+    "
+align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .list-unsty p {
+    margin: 0px;
+  }
+
+  .list-unsty a {
+    text-decoration: none;
+  }
+
+  .list-unsty span {
+    padding-left: 4px;
+    top: 6%;
+    position: relative;
+  }
+
+  /* Style for the sidebar widget header */
+  .sidebar-widget h3 {
+    font-size: 1.4vw;
+    font-weight: 500;
+    color: #6d6e6e;
+    padding: 6px 16px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+
+
+  /* Style for the list group */
+  .list-group {
+    padding-left: 0;
+    /* Remove default padding */
+    margin: 0;
+    /* Remove margin */
+  }
+
+  /* Style for individual list items */
+  .list-item {
+    padding-left: 25px;
+    /* Add padding to list items */
+  }
+
+  /* Remove list bullet style */
+  .sidebar-widget-body ul,
+  .list-group ul,
+  .list-item ul {
+    list-style-type: none;
+    /* No bullet points */
+  }
+
+  /* Optional: Add link styling for list items that contain links */
+  .list-item a {
+    color: #5e5d5d;
+    text-decoration: none;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.25vw;
+    letter-spacing: .7px;
+    font-family: "Dosis", sans-serif;
+  }
+
+  .list-item a:hover {
+    color: #ffc000;
+  }
+
+  /* Custom checkbox styling */
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    padding-left: 27px;
+    margin-bottom: 10px;
+    user-select: none;
+  }
+
+  .checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .custom-checkbox {
+    position: absolute;
+    top: 5%;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+  }
+
+  .checkbox-container input:checked~.custom-checkbox {
+    background-color: #FF5733;
+    /* Change color when checked */
+    border-color: #FF5733;
+  }
+
+  .checkbox-container .custom-checkbox:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  .checkbox-container input:checked~.custom-checkbox:after {
+    display: block;
+  }
+
+  /* Checkmark (tick) inside the custom checkbox */
+  .checkbox-container .custom-checkbox:after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .checkbox-container p {
+    margin: 0px;
+    color: #5e5d5d;
+    text-decoration: none;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.25vw;
+    letter-spacing: 0.7px;
+    font-family: "Dosis", sans-serif;
+  }
+
+  /* Style for list items */
+  .list-group-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+  }
+
+  .list-group-item {
+    padding: 10px 0;
+    border: none;
+    /* Removes the border */
+    cursor: pointer;
+  }
+
+  .list-group-item:hover {
+    background-color: #f9f9f9;
+    /* Optional hover effect */
+  }
+
+  .color-options {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+  }
+
+  .color-options li {
+    position: relative;
+  }
+
+  .color-options input[type="radio"] {
+    display: none;
+  }
+
+  .color-options label {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s;
+  }
+
+  .color-options input[type="radio"]:checked+label {
+    border-color: #7e7e7e;
+  }
+
+  .price-range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding-left: 25px;
+  }
+
+  .price-range-inputs label {
+    padding-top: 10px;
+    font-size: 1vw;
+    color: #585858;
+    font-weight: 400;
+  }
+
+  .price-range-inputs input[type="number"] {
+    width: 20%;
+    padding-top: 6px;
+    padding-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    font-size: 1vw;
+    text-align: center;
+  }
+
+  .price-range-inputs button {
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .price-range-inputs button:hover {
+    background-color: #0056b3;
+  }
+
+  /* Hide arrows in Chrome, Safari, Edge, and Opera */
+  .price-range-inputs input[type="number"]::-webkit-outer-spin-button,
+  .price-range-inputs input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Hide arrows in Firefox */
+  .price-range-inputs input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  /* Custom pagination styling inspired by Daraz */
+  .custom-pagination {
+    display: inline-flex;
+    list-style: none;
+    padding: 0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .custom-pagination .page-item {
+    margin: 0 2px;
+  }
+
+  .custom-pagination .page-link {
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 8px 14px;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+  }
+
+  .custom-pagination .page-link:hover {
+    background-color: #f7f7f7;
+    border-color: #ccc;
+  }
+
+  .custom-pagination .active .page-link {
+    background-color: #ff5a00;
+    color: #fff;
+    border-color: #ff5a00;
+  }
+
+  .custom-pagination .disabled .page-link {
+    color: #ddd;
+    pointer-events: none;
+  }
+
+  .list-grid {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btnContainer,
+  .active i {}
+</style>
+<div class="body-content outer-top-vs" id="top-banner-and-menu">
+  <div class="container-fluid">
+    <div class="row" style="margin-left: 0px; margin-right: 0px">
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="breadcrumb" style="background-color:white;>
+          <div class=" container">
+          <div class="breadcrumb-inner">
+            <ul class="list-inline list-unstyled" style="display: flex;">
+              <li><a href="{% url 'ecommerce:index' %}" style="text-decoration: none;">Home</a></li>
+              <li class="active list-unsty">
+                <p><span>></span>
+                  <a href="{% url 'ecommerce:category_detail' category_slug=category.slug %}">{{ cat_name }}</a></p>
+              </li>
+            </ul>
+          </div>
+          <!-- /.breadcrumb-inner -->
+        </div>
+        <!-- /.container -->
+      </div>
+      <!-- /.breadcrumb -->
+      <div class="col-xs-12 col-sm-12 bod" style="display:flex;">
+        <div class="col-xs-12 col-sm-12 col-md-3 sidebar">
+          <!-- Sidebar Module for Filtering Options -->
+          <div class="sidebar-module-container">
+            <!-- Shop by Categories -->
+            <div class="sidebar-widget" style="margin-bottom: 15px;">
+              <h3 class="section-title">Categories</h3>
+              <div class="sidebar-widget-body">
+                <ul class="list-group">
+                  <li class="list-item" style="padding-top: 5px;">
+                    <a href="?category=electronics" style="">Electronics</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- Filter by Brand -->
+            <div class="sidebar-widget" style="margin-bottom: 15px;">
+              <h3 class="section-title">Brand</h3>
+              <div class="sidebar-widget-body">
+                <ul class="list-group">
+                  <li class="list-group-it" style="padding-left: 25px; padding-top: 10px; padding-bottom: 0px;">
+                    <label class="checkbox-container" style="margin:0px">
+                      <input type="checkbox" name="brand" value="samsung">
+                      <span class="custom-checkbox"></span> <!-- Custom checkbox -->
+                      <p>Samsung</p>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- Filter by Color -->
+            <div class="sidebar-widget" style="margin-bottom: 15px;">
+              <h3 class="section-title">Color</h3>
+              <div class="sidebar-widget-body">
+                <ul class="color-options" style="padding-left: 25px; padding-top: 10px;">
+                  <li>
+                    <input type="radio" id="colorRed" name="color" value="red">
+                    <label for="colorRed" style="background-color: #FF0000;"></label>
+                  </li>
+                  <li>
+                    <input type="radio" id="colorGreen" name="color" value="green">
+                    <label for="colorGreen" style="background-color: #00FF00;"></label>
+                  </li>
+                  <li>
+                    <input type="radio" id="colorBlue" name="color" value="blue">
+                    <label for="colorBlue" style="background-color: #0000FF;"></label>
+                  </li>
+                  <li>
+                    <input type="radio" id="colorYellow" name="color" value="yellow">
+                    <label for="colorYellow" style="background-color: #FFFF00;"></label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- Filter by Size -->
+            <div class="sidebar-widget" style="margin-bottom: 15px;">
+              <h3 class="section-title">Size</h3>
+              <div class="sidebar-widget-body">
+                <ul class="list-group">
+                  <li class="list-group-it" style="padding-left: 25px; padding-top: 10px; padding-bottom: 0px;">
+                    <label class="checkbox-container" style="margin:0px">
+                      <input type="checkbox" name="brand" value="samsung">
+                      <span class="custom-checkbox"></span> <!-- Custom checkbox -->
+                      <p>Small</p>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- Filter by Price -->
+            <div class="sidebar-widget" style="margin-bottom: 15px;">
+              <h3 class="section-title">Price</h3>
+              <div class="sidebar-widget-body">
+                <form action="" method="get">
+                  <div class="price-range-inputs">
+                    <label for="min-price">Min:</label>
+                    <input type="number" id="min-price" name="min_price" placeholder="0">
+
+                    <label for="max-price">Max:</label>
+                    <input type="number" id="max-price" name="max_price" placeholder="10000">
+
+                    <button type="submit"><i class="fa fa-play" aria-hidden="true"></i></button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- Filter by Ratings -->
+            <div class="sidebar-widget">
+              <h3 class="section-title">Ratings</h3>
+              <div class="sidebar-widget-body">
+                <ul class="list-group" style="padding-left: 25px;">
+                  <li class="list-group-item">
+                    <a href="?rating=4">&starf;&starf;&starf;&starf; & Up</a>
+                  </li>
+                  <li class="list-group-item">
+                    <a href="?rating=3">&starf;&starf;&starf; & Up</a>
+                  </li>
+                  <li class="list-group-item">
+                    <a href="?rating=2">&starf;&starf; & Up</a>
+                  </li>
+                  <li class="list-group-item">
+                    <a href="?rating=1">&starf; & Up</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- /.sidebar-module-container -->
+        </div>
+        <!-- /.sidebar -->
+        <div class="col-xs-12 col-sm-12 col-md-9 rht-col" style="padding-left: 10px;">
+          <!-- ========================================== SECTION – HERO ========================================= -->
+          <div id="category" class="category-carousel hidden-xs">
+            <div class="item">
+              <div class="image">
+                <img src="/static/media/banners/cat-banner-1.jpg" alt="" class="img-responsive"
+                  style="height: 150px;padding-bottom: 10px;">
+              </div>
+              <div class="container-fluid">
+                <div class="caption vertical-top text-left">
+                  <div class="big-text">Big Sale</div>
+                  <div class="excerpt hidden-sm hidden-md">
+                    Save up to 49% off
+                  </div>
+                  <div class="excerpt-normal hidden-sm hidden-md">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                  </div>
+                </div>
+                <!-- /.caption -->
+              </div>
+              <!-- /.container-fluid -->
+            </div>
+          </div>
+          <div class="clearfix filters-container" style="background-color: white;">
+            <div class="row">
+              <div class="col col-sm-6 col-md-4 ">
+
+                <!-- /.filter-tabs -->
+              </div>
+              <!-- /.col -->
+              <div class="col col-sm-6 col-md-8 list-grid">
+                <div class="lbl-cnt">
+                  <span class="lbl" style="padding-right:10px;">Sort by: </span>
+                  <div class="fld inline" style="width:60%; padding: 5px;">
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                      style="padding: 10px;">
+                      <option selected>Best Match</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                  <!-- /.fld -->
+                </div>
+                <!-- /.lbl-cnt -->
+                <div id="btnContainer" style="display: flex; align-items: center; padding: 5px;">
+                  <span class="lbl" style="padding-right:10px;">View: </span>
+                  <button class="btn" onclick="listView()"
+                    style="margin-right: 5px; padding-top: 10px; border-radius: 0px; border: 1px solid;"><i
+                      class="fa fa-bars" style="font-size: 1.5vw;"></i></button>
+                  <button class="btn active" onclick="gridView()"
+                    style="display: flex; align-items: center; border-radius: 0px; border: 1px solid; padding: 12px;">
+                    <img src="/static/media/visualization.png" alt="Grid" style="width: 16px; height: 16px;">
+                  </button>
+                </div>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+          </div>
+          <div class="search-result-container">
+            <div id="myTabContent" class="tab-content category-list" style="border-radius: 0px;">
+              <div class="tab-pane active" id="grid-container">
+                <div class="category-product">
+                  <div class="row">
+                    <!-- Check if there are any products -->
+                    {% if products %}
+                    {% for product in products %}
+                    <div class="col-sm-6 col-md-4 col-lg-3" style="margin-bottom:10px">
+                      <div class="products">
+                        <div class="col-sm-2 product-box" style="margin:0px; width: 100%;line-height: 25px;">
+                          <div class="thumb-wrapper">
+                            <div class="img-box">
+                              <a href="{% url 'products:product_detail' product_slug=product.slug %}" class="herf">
+                                <img
+                                  src="{% if product.primary_image %}{{ product.primary_image.image.url }}{% else %}{% static 'path/to/default-image.jpg' %}{% endif %}"
+                                  alt="{{ product.name }}" class="img-fluid"
+                                  onerror="this.onerror=null;this.src='{% static 'path/to/default-image.jpg' %}';" />
+                              </a>
+                            </div>
+                            <div class="thumb-content">
+                              <h4>{{ product.name }}</h4>
+                              <p class="item-price" style="text-align: center; margin:0px;">
+                                {% if product.discount_percentage and product.disk_price %}
+                                <!-- Display discounted price and percentage only -->
+                                <span>৳.{{ product.disk_price|floatformat:"0" }} -
+                                  {{ product.discount_percentage }}% OFF</span>
+                                {% else %}
+                                <!-- Display regular price only if no discount -->
+                                <span>৳.{{ product.price|floatformat:"0" }}</span>
+                                {% endif %}
+                              </p>
+                              <p class="item-rating" style=" margin:0px;">
+                                <span class="star-rating">
+                                  <!-- Display full stars -->
+                                  {% for i in "01234" %}
+                                  {% if forloop.counter <= product.full_stars %}
+                                  <i class="fas fa-star"></i> <!-- Filled Star -->
+                                  {% elif forloop.counter == product.full_stars|add:1 and product.is_half_rating %}
+                                  <i class="fas fa-star-half-alt"></i> <!-- Half Star -->
+                                  {% else %}
+                                  <i class="far fa-star"></i> <!-- Empty Star -->
+                                  {% endif %}
+                                  {% endfor %}
+                                </span>
+
+                                {% if product.total_ratings > 0 %}
+                                ({{ product.total_ratings }})
+                                {% endif %}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- /.products -->
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p>No products available in this category.</p>
+                    {% endif %}
+                  </div>
+                  <div class="d-flex justify-content-end mt-2">
+                    <nav aria-label="Page navigation">
+                      <ul class="custom-pagination">
+                        {% if products.has_previous %}
+                        <li class="page-item">
+                          <a class="page-link" href="?page={{ products.previous_page_number }}"
+                            aria-label="Previous">‹</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                          <span class="page-link">‹</span>
+                        </li>
+                        {% endif %}
+
+                        {% for num in products.paginator.page_range %}
+                        {% if products.number == num %}
+                        <li class="page-item active">
+                          <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > products.number|add:-2 and num < products.number|add:2 %}
+                        <li class="page-item">
+                          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if products.has_next %}
+                        <li class="page-item">
+                          <a class="page-link" href="?page={{ products.next_page_number }}" aria-label="Next">›</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                          <span class="page-link">›</span>
+                        </li>
+                        {% endif %}
+                      </ul>
+                    </nav>
+                  </div>
+                  <!-- /.row -->
+                </div>
+                <!-- /.category-product -->
+              </div>
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.search-result-container -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
+</div>
+
+
+<script>
+  $(document).ready(function () {
+    document.addEventListener('DOMContentLoaded', () => {
+      // Handle tab switching between grid and list views
+      const filterTabs = document.querySelectorAll('#filter-tabs li a');
+      const tabPanes = document.querySelectorAll('.tab-pane');
+
+      filterTabs.forEach(tab => {
+        tab.addEventListener('click', function (event) {
+          event.preventDefault();
+          const target = this.getAttribute('href');
+
+          // Remove active class from all tabs
+          filterTabs.forEach(t => t.parentElement.classList.remove('active'));
+          // Hide all tab panes
+          tabPanes.forEach(pane => pane.classList.remove('active'));
+
+          // Add active class to the clicked tab and show the corresponding tab pane
+          this.parentElement.classList.add('active');
+          document.querySelector(target).classList.add('active');
+        });
+      });
+
+      // Add to cart button functionality
+      const addToCartButtons = document.querySelectorAll('.add-cart-button');
+
+      addToCartButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          alert('Product added to cart!');
+          // Add your cart functionality here
+        });
+      });
+    });
+  });
+</script>
+{% endblock %}
